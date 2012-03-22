@@ -11,7 +11,7 @@ nor="$(tput sgr0)"          # normal  \003[0m -- reset
 [[ -e "$p/$n/$c/out" && -e "$p/$n/$c/in" ]] || exit 1
 
 tailf "$p/$n/$c/out" | while read -r date time nick msg
-do printf -- "$blk%s $grn%15s $blk| $nor%s\n" "$date $time" "${nick}" "$msg"
+do printf -- "\r$blk%s $grn%15s $blk| $nor%s\n" "$date $time" "${nick}" "$msg"
 done &
 
 trap 'kill -TERM -0' EXIT
