@@ -4,6 +4,7 @@
 : "${n:=irc.freenode.net}"  # network
 : "${p:=/tmp/irc}"          # root dir
 : "${m:=12}"                # max nick lenght
+: "${h:=20}"                # lines from history
 
 blk="$(tput setaf 6)"       # cyan    \003[36m
 grn="$(tput setaf 2)"       # green   \003[31m
@@ -11,7 +12,7 @@ nor="$(tput sgr0)"          # normal  \003[0m -- reset
 
 [[ -e "$p/$n/$c/out" && -e "$p/$n/$c/in" ]] || exit 1
 
-tailf "$p/$n/$c/out" | while read -r date time nick msg; do
+tailf -n "$h" "$p/$n/$c/out" | while read -r date time nick msg; do
     nick="${nick:1:-1}"
     printf -- "\r$blk%s $grn%*s $blk| $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$msg"
 done &
