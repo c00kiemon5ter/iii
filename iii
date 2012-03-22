@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: "${c:=#foss-aueb}"        # channel
+: "${c=#foss-aueb}"         # channel
 : "${n:=irc.freenode.net}"  # network
 : "${p:=/tmp/irc}"          # root dir
 
