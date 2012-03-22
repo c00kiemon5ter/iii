@@ -18,7 +18,7 @@ trap 'kill -TERM -0' EXIT
 
 while read -r; do
     [[ "$REPLY" == "QUIT" ]] && break
-    tput cuu1 # do not echo read's input
+    [[ "$REPLY" =~ ^/ ]] || tput cuu1
     printf -- "%s\n" "$REPLY" >"$p/$n/$c/in"
 done
 
