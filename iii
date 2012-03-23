@@ -28,7 +28,8 @@ done &
 
 while read -r; do
     [[ "$REPLY" == "QUIT" ]] && break
-    [[ "$REPLY" =~ ^/ ]] || tput cuu1
+    [[ "$REPLY" =~ ^/[aejlmnt] ]] || tput cuu1
+    [[ "$REPLY" == "/-" ]] && mark && continue
     printf -- "%s\n" "$REPLY" >"$p/$n/$c/in"
 done
 
