@@ -10,7 +10,7 @@ blk="$(tput setaf 6)"       # cyan    \003[36m
 grn="$(tput setaf 2)"       # green   \003[31m
 nor="$(tput sgr0)"          # normal  \003[0m -- reset
 
-bar="-----------------------------------------------------------------------"
+bar="---------------"       # trackbar
 
 [[ -e "$r/$n/$c/out" && -e "$r/$n/$c/in" ]] || exit 1
 
@@ -23,11 +23,12 @@ trap 'mark; kill -TERM -0' EXIT
 
 tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
     nick="${nick:1:-1}"
+    #rclr="\e[$((30 + ${#nick} % 8 + 1))m"
     printf -- "\r$blk%s $grn%*s $blk| $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$msg"
 done &
 
 while read -r; do
-    [[ "$REPLY" == "QUIT" ]] && break
+    [[ "$REPLY" == "QUIT" || "$REPLY" == ":q" ]] && break
     [[ "$REPLY" =~ ^/[aejlmnt] ]] || tput cuu1
     [[ "$REPLY" == "/-" ]] && mark && continue
     printf -- "%s\n" "$REPLY" >"$r/$n/$c/in"
