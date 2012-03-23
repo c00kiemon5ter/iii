@@ -1,0 +1,60 @@
+
+iii
+===
+
+interactive [ii](http://tools.suckless.org/ii/)
+
+utils
+-----
+
+### iii
+
+`iii` is a frontend to `ii` so that one can easily view and send messages.
+it outputs text, formatted, and colored, and allows for some configuration.
+options are passed as external variables.
+
+    r: the root directory [default: /tmp/irc]
+    n: the network in which the channel resides [default: irc.freenode.net]
+    c: the channel to interact with [default: #foss-aueb]
+    m: max length for nicks [default: 12]
+    h: the number of lines to include from history [default: 20]
+
+a typical line would be:
+
+    2012-03-23 19:24 c00kiemon5te | test ..
+
+### notifiii
+
+`notifiii` monitors a hierarchy of files and automatically spawns a terminal running `iii` with the channel that got activity.
+`notifiii` by default ignores joins, parts, quits and any message from the network (user `-!-`).
+`notifiii` accepts the directory root - by default /tmp/irc - to monitor as an argument.
+
+bugs
+----
+
+ * if someone sends a message while the user types, the message up to that point
+   is hidden (but not lost). This, is most possibly unfixable.
+
+ * bash is not everywhere. transform to posix/sh.
+
+ * inotify is not portable.
+   replace with something based on [libev](http://software.schmorp.de/pkg/libev.html)
+
+ * the `iii` bug, with the hidden input, can most probably, only be solved if rewritten
+   and taking advantage of curses. rewrite; use `ncurses` and `libev`
+
+deps
+----
+
+  * ii
+  * inotify-tools
+
+unlicense
+---------
+
+code and text are unlicensed.
+see UNLICENSE file and [unlicense.org](http://unlicense.org/).
+
+original hacks by Ivan c00kiemon5ter V Kanakarakis.
+if you have cookies, share :]
+
