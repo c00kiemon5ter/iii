@@ -23,6 +23,8 @@ a typical line would be:
 
     2012-03-23 19:24 c00kiemon5te | test ..
 
+to quit `iii` just send `QUIT` or `:q`
+
 ### notifiii
 
 `notifiii` monitors a hierarchy of files and automatically spawns a terminal running `iii` with the channel that got activity.
@@ -41,7 +43,8 @@ bugs
    replace with something based on [libev](http://software.schmorp.de/pkg/libev.html)
 
  * the `iii` bug, with the hidden input, can most probably, only be solved if rewritten
-   and taking advantage of curses. rewrite; use `ncurses` and `libev`
+   and taking advantage of curses. rewrite; use `ncurses` and `libev`.
+   this would probably fix all of the above.
 
 deps
 ----
