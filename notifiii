@@ -10,8 +10,8 @@ while read -r p < <(inotifywait --exclude "in" --format %w%f -e modify -r "$r");
     c="${p##*/}" # c=channel
     p="${p%/*}"  # p=/network
     n="${p##*/}" # n=network
-    if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "IRC URxvt"
-    then r="$r" n="$n" c="$c" urxvtdc -name "IRC" -e $HOME/projects/iii/iii
+    if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "$c URxvt"
+    then r="$r" n="$n" c="$c" urxvtdc -name "$c" -e $HOME/projects/iii/iii &
     fi
 done
 
