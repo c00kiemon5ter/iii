@@ -23,8 +23,8 @@ trap 'mark; kill -TERM -0' EXIT
 
 tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
     nick="${nick:1:-1}"
-    #rclr="\e[$((30 + ${#nick} % 8 + 1))m"
-    printf -- "\r$blk%s $grn%*s $blk| $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$msg"
+    rclr="\e[$((30 + ${#nick} % 8 + 1))m" #"$grn"
+    printf -- "\r$blk%s $rclr%*s $blk| $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$msg"
 done &
 
 while read -r; do
