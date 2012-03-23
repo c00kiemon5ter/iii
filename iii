@@ -1,8 +1,8 @@
 #!/bin/bash
 
-: "${c=#foss-aueb}"         # channel
+: "${r:=/tmp/irc}"          # root dir
 : "${n:=irc.freenode.net}"  # network
-: "${p:=/tmp/irc}"          # root dir
+: "${c=#foss-aueb}"         # channel
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
 
@@ -12,16 +12,16 @@ nor="$(tput sgr0)"          # normal  \003[0m -- reset
 
 bar="-----------------------------------------------------------------------"
 
-[[ -e "$p/$n/$c/out" && -e "$p/$n/$c/in" ]] || exit 1
+[[ -e "$r/$n/$c/out" && -e "$r/$n/$c/in" ]] || exit 1
 
 mark() {
-    read -r date time nick msg < <(tail -n 1 "$p/$n/$c/out")
-    [[ "$msg" != "$bar" ]] && printf -- "%s -!- %s\n" "$(date +"%F %R")" "$bar" >>"$p/$n/$c/out"
+    read -r date time nick msg < <(tail -n 1 "$r/$n/$c/out")
+    [[ "$msg" != "$bar" ]] && printf -- "%s -!- %s\n" "$(date +"%F %R")" "$bar" >>"$r/$n/$c/out"
 }
 
 trap 'mark; kill -TERM -0' EXIT
 
-tailf -n "$h" "$p/$n/$c/out" | while read -r date time nick msg; do
+tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
     nick="${nick:1:-1}"
     printf -- "\r$blk%s $grn%*s $blk| $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$msg"
 done &
@@ -30,6 +30,6 @@ while read -r; do
     [[ "$REPLY" == "QUIT" ]] && break
     [[ "$REPLY" =~ ^/[aejlmnt] ]] || tput cuu1
     [[ "$REPLY" == "/-" ]] && mark && continue
-    printf -- "%s\n" "$REPLY" >"$p/$n/$c/in"
+    printf -- "%s\n" "$REPLY" >"$r/$n/$c/in"
 done
 
