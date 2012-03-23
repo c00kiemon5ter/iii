@@ -19,7 +19,7 @@ mark() {
     [[ "$msg" != "$bar" ]] && printf -- "%s -!- %s\n" "$(date +"%F %R")" "$bar" >>"$r/$n/$c/out"
 }
 
-trap 'mark; kill -TERM -0' EXIT
+trap 'kill -TERM -0' EXIT
 
 tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
     nick="${nick:1:-1}"
