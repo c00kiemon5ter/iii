@@ -23,7 +23,7 @@ mark() {
 trap 'kill -TERM -0' EXIT
 
 tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
-    [[ "$nick" != '-!-' ]] && nick="${nick:1:-1}"
+    [[ "$nick" = ^\<.*\>$ ]] && nick="${nick:1:-1}"
     rclr="\e[$((30 + ${#nick} % 8 + 1))m" #"$grn"
     printf -- "\r$blk%s $rclr%*s $blk%s $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$s" "$msg"
 done &
