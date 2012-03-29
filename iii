@@ -5,6 +5,7 @@
 : "${c=#foss-aueb}"         # channel
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
+: "${s:=|}"                 # nick-message separator
 
 blk="$(tput setaf 6)"       # cyan    \003[36m
 grn="$(tput setaf 2)"       # green   \003[31m
@@ -24,7 +25,7 @@ trap 'kill -TERM -0' EXIT
 tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
     [[ "$nick" != '-!-' ]] && nick="${nick:1:-1}"
     rclr="\e[$((30 + ${#nick} % 8 + 1))m" #"$grn"
-    printf -- "\r$blk%s $rclr%*s $blk| $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$msg"
+    printf -- "\r$blk%s $rclr%*s $blk%s $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$s" "$msg"
 done &
 
 while read -r; do
