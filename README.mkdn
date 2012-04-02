@@ -55,9 +55,9 @@ deps
 unlicense
 ---------
 
-code and text are unlicensed.
+`iii` and `notifiii`: code and text are unlicensed.
 see UNLICENSE file and [unlicense.org](http://unlicense.org/).
 
-original hacks by Ivan c00kiemon5ter V Kanakarakis.
+original hacks by [Ivan c00kiemon5ter V Kanakarakis](http://c00kiemon5ter.github.com)
 if you have cookies, share :]
 
