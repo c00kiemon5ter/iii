@@ -8,6 +8,7 @@
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
 : "${s:=|}"                 # nick-message separator
+: "${l:=false}"             # whether to use random colors for nicks
 
 blk="$(tput setaf 6)"       # cyan    \003[36m
 grn="$(tput setaf 2)"       # green   \003[31m
@@ -26,8 +27,8 @@ trap 'kill -TERM -0' EXIT
 
 tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
     [[ "$nick" = ^\<.*\>$ ]] && nick="${nick:1:-1}"
-    rclr="\e[$((30 + ${#nick} % 8 + 1))m" #"$grn"
-    printf -- "\r$blk%s $rclr%*s $blk%s $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$s" "$msg"
+    $l && clr="\e[$((30 + ${#nick} % 8 + 1))m" || clr="$grn"
+    printf -- "\r$blk%s $clr%*s $blk%s $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$s" "$msg"
 done &
 
 while read -r; do
