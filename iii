@@ -32,9 +32,10 @@ tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
 done &
 
 while read -r; do
-    [[ "$REPLY" == "QUIT" || "$REPLY" == ":q" ]] && break
-    [[ "$REPLY" =~ ^/[aejlmnt] ]] || tput cuu1
-    [[ "$REPLY" == "/-" ]] && mark && continue
+    [[ "$REPLY" == ":q" ]] && break
+    [[ "$REPLY" == ":x" ]] && { mark; break; }
+    [[ "$REPLY" == ":m" ]] && { mark; continue; }
+    [[ "$REPLY" =~ ^/ ]] || tput cuu1
     printf -- "%s\n" "$REPLY" >"$r/$n/$c/in"
 done
 
