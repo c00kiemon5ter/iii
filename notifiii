@@ -18,19 +18,23 @@ while read -r p < <(inotifywait --exclude "in" --format %w%f -e modify -r "$r");
     p="${p%/*}"  # p=/network
     n="${p##*/}" # n=network
 
-    ## spawn a new tmux window named <channel> in a tmux session named IRC and send an urgent hint
+    ## spawn a new tmux window named <channel> in a tmux session named IRC
+    # FIXME: grep fails when c is empty (ie network view)
     opts=( TERM=rxvt-unicode l=true h=50 n="$n" c="$c" )
-    if ! tmux list-sessions | grep "^IRC"; then
-        urxvtdc -name "IRC-tmux" -e tmux new-session -s IRC -n "${c###}" "${opts[*]} ./iii"
-    elif ! tmux list-windows -t IRC | grep "${c###}"; then
-        # FIXME: grep fails when c is empty (ie network view)
-        tmux new-window -n "${c###}" "${opts[*]} ./iii"
+    if ! tmux list-sessions | grep "^IRC"
+    then urxvtc -name "IRC-tmux" -e tmux new-session -s IRC -n "${c###}" "${opts[*]} iii"
+    elif ! tmux list-windows -t IRC | grep "${c###}"
+    then tmux new-window -t IRC -n "${c###}" "${opts[*]} iii"
     fi
-    tmux new-window -n "notify" "printf -- %b '\a'"
 
-    ## spawn a new irssi terminal with IRC-<channel> class name
+    ## send an urgent hint and a background window to notify of new messages
+    if ! tmux list-windows -t IRC | grep "NOTICE ${c###}"
+    then tmux new-window -d -t IRC -n "NOTICE ${c###}" "printf -- %b '\a'; sleep 2"
+    fi
+
+    ## spawn a new urxvt terminal with IRC-<channel> class name
     #if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "$c URxvt"
-    #then r="$r" n="$n" c="$c" urxvtdc -name "IRC-$c" -e $HOME/projects/iii/iii &
+    #then r="$r" n="$n" c="$c" urxvtc -name "IRC-$c" -e iii &
     #fi
 done
 
