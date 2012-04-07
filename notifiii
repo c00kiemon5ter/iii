@@ -18,8 +18,17 @@ while read -r p < <(inotifywait --exclude "in" --format %w%f -e modify -r "$r");
     p="${p%/*}"  # p=/network
     n="${p##*/}" # n=network
 
-    if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "$c URxvt"
-    then r="$r" n="$n" c="$c" urxvtdc -name "IRC-$c" -e $HOME/projects/iii/iii &
+    ## spawn a new tmux window with <channel> name in a tmux session named IRC
+    if ! tmux list-sessions | grep "^IRC"; then
+        urxvtdc -name "IRC-tmux" -e tmux new-session -s IRC -n "${c###}" "l=true h=50 n="$n" c="$c" ./iii" &
+    elif ! tmux list-windows -t IRC | grep "${c###}"; then
+        # FIXME: grep fails when c is empty (ie network view)
+        tmux new-window -n "${c###}" "l=true h=50 n="$n" c="$c" ./iii" &
     fi
+
+    ## spawn a new irssi terminal with IRC-<channel> class name
+    #if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "$c URxvt"
+    #then r="$r" n="$n" c="$c" urxvtdc -name "IRC-$c" -e $HOME/projects/iii/iii &
+    #fi
 done
 
