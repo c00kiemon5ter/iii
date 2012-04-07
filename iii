@@ -34,7 +34,7 @@ done &
 while read -r; do
     [[ "$REPLY" == ":q" ]] && break
     [[ "$REPLY" == ":x" ]] && { mark; break; }
-    [[ "$REPLY" == ":m" ]] && { mark; continue; }
+    [[ "$REPLY" == ":m" ]] && { tput cuu1; mark; continue; }
     [[ "$REPLY" =~ ^/ ]] || tput cuu1
     printf -- "%s\n" "$REPLY" >"$r/$n/$c/in"
 done
