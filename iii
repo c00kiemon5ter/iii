@@ -27,6 +27,7 @@ trap 'kill -TERM -0' EXIT
 
 tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
     [[ "$nick" =~ ^\<.*\>$ ]] && nick="${nick:1:-1}"
+    [[ "$msg" =~ ^ACTION ]] && { msg="$nick:${msg#ACTION}"; nick="*"; }
     $l && clr="$(tput setaf $(( (${#nick} % 15) + 1)))" || clr="$grn"
     printf -- "\r$blk%s $clr%*s $blk%s $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$s" "$msg"
 done &
