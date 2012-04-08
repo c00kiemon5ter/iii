@@ -8,11 +8,14 @@
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
 : "${s:=|}"                 # nick-message separator
-: "${l:=false}"             # whether to use random colors for nicks
+: "${l:=true}"              # whether to use random colors for nicks
+: "${u:=$USER}"             # the user's nickname
+: "${b:=3}"                 # background highlight color
 
 blk="$(tput setaf 6)"       # cyan    \003[36m
 grn="$(tput setaf 2)"       # green   \003[31m
-nor="$(tput sgr0)"          # normal  \003[0m -- reset
+wht="$(tput setaf 7)"       # white   \003[37m
+rst="$(tput sgr0)"          # reset   \003[0m -- reset
 
 bar="---------------"       # trackbar
 
@@ -28,8 +31,9 @@ trap 'kill -TERM -0' EXIT
 tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
     [[ "$nick" =~ ^\<.*\>$ ]] && nick="${nick:1:-1}"
     [[ "$msg" =~ ^ACTION ]] && { msg="$nick:${msg#ACTION}"; nick="*"; }
+    $l && [[ "$msg" =~ "$u" ]] && date="$(tput setaf $b)$date"
     $l && clr="$(tput setaf $(( (${#nick} % 15) + 1)))" || clr="$grn"
-    printf -- "\r$blk%s $clr%*s $blk%s $nor%s\n" "$date $time" "$m" "${nick:0:$m}" "$s" "$msg"
+    printf -- "\r$blk%s $clr%*s $blk%s $wht%s$rst\n" "$date $time" "$m" "${nick:0:$m}" "$s" "$msg"
 done &
 
 while read -r; do
