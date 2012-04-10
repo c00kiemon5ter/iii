@@ -29,8 +29,11 @@ while read -r p < <(inotifywait --exclude "in" --format %w%f -e modify -r "$r");
     fi
 
     ## send an urgent hint on a background window to notify of new messages
-    if ! tmux list-windows -t IRC | grep "NOTICE ${c###}"
-    then tmux new-window -d -t IRC -n "NOTICE ${c###}" "printf -- %b '\a'; sleep 2"
+    if ! tmux list-windows -t IRC | grep "\(NOTICE\|ACTION\) ${c###}\|${c###}.*(active)$"
+    then if [[ "$msg" =~ "$u" ]]
+        then tmux new-window -d -t IRC -n "NOTICE ${c###}" "printf -- %b '\a'; sleep 4"
+        else tmux new-window -d -t IRC -n "ACTION ${c###}" "printf -- %b '\a'; sleep 4"
+        fi
     fi
 
     ## spawn a new urxvt terminal with IRC-<channel> class name
