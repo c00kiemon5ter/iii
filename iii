@@ -17,7 +17,7 @@ grn="$(tput setaf 2)"       # green   \003[31m
 wht="$(tput setaf 7)"       # white   \003[37m
 rst="$(tput sgr0)"          # reset   \003[0m -- reset
 
-bar="---------------"       # trackbar
+bar="------------------------------------------------------------" # trackbar
 
 [[ -e "$r/$n/$c/out" && -e "$r/$n/$c/in" ]] || exit 1
 
