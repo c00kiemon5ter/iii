@@ -4,7 +4,7 @@
 
 : "${r:=/tmp/irc}"          # root dir
 : "${n:=irc.freenode.net}"  # network
-: "${c=#foss-aueb}"         # channel
+: "${c:=""}"                # channel - empty for network(default)
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
 : "${s:=|}"                 # nick-message separator
