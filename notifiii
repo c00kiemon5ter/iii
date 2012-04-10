@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Ivan c00kiemon5ter V Kanakarakis (http://c00kiemon5ter.github.com)
 # for noncopyright information see UNLICENSE file http://unlicense.org/ .
+#
+# monitor the given irc directory tree for changes - ignores server messages
+# and spawns tmiii or a new urxvt terminal with the chanel that had activity
 
 r="${1:-/tmp/irc}"
 GREP_OPTIONS=""

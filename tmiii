@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Ivan c00kiemon5ter V Kanakarakis (http://c00kiemon5ter.github.com)
 # for noncopyright information see UNLICENSE file http://unlicense.org/ .
+#
+# wrapper around iii
+# spawns iii in a tmux session named IRC with the channel as title
+# accepts all env vars iii accepts plus 't' which sets the terminal
 
 ## collect options from env - all opts to iii should be set here
 opts=( TERM="${t:-rxvt-unicode}" m="$m" h="$h" s="$s" l=$l u="$u" b="$b" r="$r" n="$n" c="$c" )
