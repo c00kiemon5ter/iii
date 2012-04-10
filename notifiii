@@ -18,15 +18,10 @@ while read -r p < <(inotifywait --exclude "in" --format %w%f -e modify -r "$r");
     p="${p%/*}"  # p=/network
     n="${p##*/}" # n=network
 
-    opts=( TERM=rxvt-unicode h=50 l=true n="$n" c="$c" )
+    opts=( h=50 l=true r="$r" n="$n" c="$c" )
 
     ## spawn a new tmux window named <channel> in a tmux session named IRC
-    # FIXME: grep fails when c is empty (ie network view)
-    if ! tmux list-sessions | grep "^IRC"
-    then urxvtc -name "IRC-tmux" -e tmux new-session -s IRC -n "${c###}" "${opts[*]} iii"
-    elif ! tmux list-windows -t IRC | grep "${c###}"
-    then tmux new-window -t IRC -n "${c###}" "${opts[*]} iii"
-    fi
+    env ${opts[*]} tmiii
 
     ## send an urgent hint on a background window to notify of new messages
     if ! tmux list-windows -t IRC | grep "\(NOTICE\|ACTION\) ${c###}\|${c###}.*(active)$"
