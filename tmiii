@@ -3,7 +3,7 @@
 # for noncopyright information see UNLICENSE file http://unlicense.org/ .
 
 ## collect options from env - all opts to iii should be set here
-opts=( TERM="rxvt-unicode" m="$m" h="$h" s="$s" l=$l u="$u" b="$b" r="$r" n="$n" c="$c" )
+opts=( TERM="${t:-rxvt-unicode}" m="$m" h="$h" s="$s" l=$l u="$u" b="$b" r="$r" n="$n" c="$c" )
 
 ## spawn a new tmux window named <channel> in a tmux session named IRC
 # FIXME: grep fails when c is empty (ie network view)
