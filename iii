@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Ivan c00kiemon5ter V Kanakarakis (http://c00kiemon5ter.github.com)
-# see UNLICENSE file http://unlicense.org/ .
+# for noncopyright information see UNLICENSE file http://unlicense.org/ .
 
 : "${r:=/tmp/irc}"          # root dir
 : "${n:=irc.freenode.net}"  # network
