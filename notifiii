@@ -10,8 +10,8 @@ GREP_OPTIONS=""
 
 trap 'kill -TERM -0' EXIT
 
-while read -r p < <(inotifywait --exclude "in" --format %w%f -e modify -r "$r"); do
-    read -r date time nick msg < <(tail -n 1 "$p")
+while read -r; do
+    read -r date time nick msg < <(tail -n 1 "$REPLY/out")
     [[ "$nick" == '-!-' ]] && continue
 
     p="${p#$r}"  # p=/network/channel/file
@@ -38,5 +38,5 @@ while read -r p < <(inotifywait --exclude "in" --format %w%f -e modify -r "$r");
     #if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "$c URxvt"
     #then "${opts[*]}" urxvtc -name "IRC-$c" -e iii
     #fi
-done
+done < <(inotifywait -m --format %w -e modify -r "$r" --exclude "in")
 
