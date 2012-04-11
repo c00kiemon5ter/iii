@@ -14,12 +14,13 @@ while read -r; do
     read -r date time nick msg < <(tail -n 1 "$REPLY/out")
     [[ "$nick" == '-!-' ]] && continue
 
-    p="${p#$r}"  # p=/network/channel/file
-    f="${p##*/}" # f=file
-    p="${p%/*}"  # p=/network/channel
-    c="${p##*/}" # c=channel
-    p="${p%/*}"  # p=/network
-    n="${p##*/}" # n=network
+    p="${REPLY#$r}" # p=/network/channel
+    IFS='/' read -ra arr <<< "$p"
+    c="${arr[@]: -1:1}"
+    n="${arr[@]: -2:1}"
+
+    # if network is empty then action is on the network view
+    test -z "$n" && n="$c" c=""
 
     opts=( h=50 l=true r="$r" n="$n" c="$c" )
 
