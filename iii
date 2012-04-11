@@ -6,13 +6,13 @@
 # follows the tail of the out file
 # and redirects input to the in file
 
-: "${r:=/tmp/irc}"          # root dir
+: "${i:=/tmp/irc}"          # root irc dir
 : "${n:=irc.freenode.net}"  # network
 : "${c:=""}"                # channel - empty for network (default)
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
 : "${s:=|}"                 # nick-message separator
-: "${l:=true}"              # whether to use random colors for nicks
+: "${r:=true}"              # whether to use random colors for nicks
 : "${u:=$USER}"             # the user's nickname
 : "${b:=3}"                 # background highlight color
 
@@ -23,21 +23,21 @@ rst="$(tput sgr0)"          # reset   \003[0m -- reset
 
 bar="------------------------------------------------------------" # trackbar
 
-[[ -e "$r/$n/$c/out" && -e "$r/$n/$c/in" ]] || exit 1
+[[ -e "$i/$n/$c/out" && -e "$i/$n/$c/in" ]] || exit 1
 
 mark() {
-    read -r date time nick msg < <(tail -n 1 "$r/$n/$c/out")
-    [[ "$msg" != "$bar" ]] && printf -- "%s -!- %s\n" "$(date +"%F %R")" "$bar" >>"$r/$n/$c/out"
+    read -r date time nick msg < <(tail -n 1 "$i/$n/$c/out")
+    [[ "$msg" != "$bar" ]] && printf -- "%s -!- %s\n" "$(date +"%F %R")" "$bar" >>"$i/$n/$c/out"
 }
 
 trap 'kill -TERM -0' EXIT
 
-tailf -n "$h" "$r/$n/$c/out" | while read -r date time nick msg; do
+tailf -n "$h" "$i/$n/$c/out" | while read -r date time nick msg; do
     [[ "$nick" =~ ^\<.*\>$ ]] && nick="${nick:1:-1}"
     [[ "$msg" =~ ^ACTION ]] && { msg="$nick:${msg#ACTION}"; nick="*"; }
-    $l && [[ "$msg" =~ "$u" ]] && date="$(tput setaf $b)$date"
+    $r && [[ "$msg" =~ "$u" ]] && date="$(tput setaf $b)$date"
     # value between 1 and 15 based on the nick length and ascii code of the nick's first letter
-    $l && clr="$(tput setaf $(( ((${#nick} + $(printf -- "%d" "'$nick")) % 15) + 1)))" || clr="$grn"
+    $r && clr="$(tput setaf $(( ((${#nick} + $(printf -- "%d" "'$nick")) % 15) + 1)))" || clr="$grn"
     printf -- "\r$blk%s $clr%*s $blk%s $wht%s$rst\n" "$date $time" "$m" "${nick:0:$m}" "$s" "$msg"
 done &
 
@@ -46,6 +46,6 @@ while read -r; do
     [[ "$REPLY" == ":x" ]] && { mark; break; }
     [[ "$REPLY" == ":m" ]] && { tput cuu1; mark; continue; }
     [[ "$REPLY" =~ ^/ ]] || tput cuu1
-    printf -- "%s\n" "$REPLY" >"$r/$n/$c/in"
+    printf -- "%s\n" "$REPLY" >"$i/$n/$c/in"
 done
 

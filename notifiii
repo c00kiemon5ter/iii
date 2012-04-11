@@ -5,7 +5,7 @@
 # monitor the given irc directory tree for changes - ignores server messages
 # and spawns tmiii or a new urxvt terminal with the chanel that had activity
 
-r="${1:-/tmp/irc}"
+i="${1:-/tmp/irc}"
 GREP_OPTIONS=""
 
 trap 'kill -TERM -0' EXIT
@@ -14,7 +14,7 @@ while read -r; do
     read -r date time nick msg < <(tail -n 1 "$REPLY/out")
     [[ "$nick" == '-!-' ]] && continue
 
-    p="${REPLY#$r}" # p=/network/channel
+    p="${REPLY#$i}" # p=/network/channel
     IFS='/' read -ra arr <<< "$p"
     c="${arr[@]: -1:1}"
     n="${arr[@]: -2:1}"
@@ -22,7 +22,7 @@ while read -r; do
     # if network is empty then action is on the network view
     test -z "$n" && n="$c" c=""
 
-    opts=( h=50 l=true r="$r" n="$n" c="$c" )
+    opts=( h=50 r=true i="$i" n="$n" c="$c" )
 
     ## spawn a new tmux window named <channel> in a tmux session named IRC
     env ${opts[*]} tmiii
@@ -39,5 +39,5 @@ while read -r; do
     #if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "$c URxvt"
     #then "${opts[*]}" urxvtc -name "IRC-$c" -e iii
     #fi
-done < <(inotifywait -m --format %w -e modify -r "$r" --exclude "in")
+done < <(inotifywait -m --format %w -e modify -r "$i" --exclude "in")
 
