@@ -1,11 +1,4 @@
+fold text ?
 
-writing while someone else talks grabbles the input
-this seems like a curses job really
-probably unsolvable with plain sh/bash
-terminfo provides restrains on scroll regions
-    If  the  terminal has a settable scrolling region (like the vt100) the command to set this can be described with the csr capability, which
-    takes two parameters: the top and bottom lines of the scrolling region.  The cursor position is, alas, undefined after using this command.
-    It is possible to get the effect of insert or delete line using csr on a properly chosen region; the sc and rc (save and  restore  cursor)
-    commands  may  be  useful  for  ensuring  that your synthesized insert/delete string does not move the cursor.  (Note that the ncurses(3X)
-    library does this synthesis automatically, so you need not compose insert/delete strings for an entry with csr).
+use rlwrap inside iii
 
