@@ -6,8 +6,8 @@
 # follows the tail of the out file
 # and redirects input to the in file
 
-: "${i:=/tmp/irc}"          # root irc dir
-: "${n:=irc.freenode.net}"  # network
+: "${i:=$HOME/irc}"         # root irc dir
+: "${n:=irc.oftc.net}"      # network
 : "${c:=""}"                # channel - empty for network (default)
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history

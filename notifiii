@@ -5,7 +5,7 @@
 # monitor the given irc directory tree for changes - ignores server messages
 # and spawns tmiii or a new urxvt terminal with the chanel that had activity
 
-i="${1:-/tmp/irc}"
+i="${1:-$HOME/irc}"
 GREP_OPTIONS=""
 
 trap 'kill -TERM -0' EXIT
