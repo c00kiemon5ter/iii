@@ -1,63 +1,72 @@
 
 iii
-===
-
-interactive [ii](http://tools.suckless.org/ii/)
-
-utils
------
-
-### iii
+---
 
 `iii` is a frontend to `ii` so that one can easily view and send messages.
 it outputs text, formatted, and colored, and allows for some configuration.
-options are passed as external variables.
+options are passed as enviromental variables.
 
-    r: the root directory [default: /tmp/irc]
-    n: the network in which the channel resides [default: irc.freenode.net]
-    c: the channel to interact with [default: #foss-aueb]
+    u: the user's nickname
+    i: the root directory [default: $HOME/irc]
+    n: the network in which the channel resides [default: irc.oftc.net]
+    c: the channel to interact with [default: none - the network view]
     m: max length for nicks [default: 12]
     h: the number of lines to include from history [default: 20]
+    s: the separator between the nick and the message
+    r: randomization of nick colors
+    l: the highlight color when nick is mentioned
 
-a typical line would be:
+typical usage would be:
 
-    2012-03-23 19:24 c00kiemon5te | test ..
+    c=#suckless iii
+    n=irc.freenode.net c=#musl iii
 
-to quit `iii` just send `QUIT` or `:q`
+to quit `iii` just send `:q`.
+to mark the current spot on the conversation send `:m`.
+to quit and mark send `:x`.
 
-### notifiii
+tmiii
+-----
+
+`tmiii` is a wrapper to `iii` to spawn `iii` instances inside a `tmux` session named *IRC*.
+each `iii` instance inside `tmux` is on each own window, named by the channel it shows.
+`tmiii` acceps the same env vars as `iii` plus `t` to set the TERM variable, used by `tmux`.
+
+notifiii
+--------
 
 `notifiii` monitors a hierarchy of files and automatically spawns a terminal running `iii` with the channel that got activity.
 `notifiii` by default ignores joins, parts, quits and any message from the network (user `-!-`).
-`notifiii` accepts the directory root - by default /tmp/irc - to monitor as an argument.
+`notifiii` accepts the irc root directory - by default `$HOME/irc` - to monitor as an argument.
+
+    notifiii /tmp/irc
+
+dependencies
+------------
+
+ * inotify-tools
 
 bugs
 ----
 
- * if someone sends a message while the user types, the message up to that point
-   is hidden (but not lost). This, is most possibly unfixable.
-
- * bash is not everywhere. transform to posix/sh.
-
+ * bash is not everywhere - translate to posix/sh.
  * inotify is not portable.
-   replace with something based on [libev](http://software.schmorp.de/pkg/libev.html)
 
- * the `iii` bug, with the hidden input, can most probably, only be solved if rewritten
-   and taking advantage of curses. rewrite; use `ncurses` and `libev`.
-   this would probably fix all of the above.
+related
+-------
 
-deps
-----
+ * [nii](https://bitbucket.org/bobertlo/nii)
+ * [pcw](https://bitbucket.org/emg/pcw)
+ * [srw](https://bitbucket.org/emg/srw)
+ * [niii](https://github.com/c00kiemon5ter/niii)
+ * [im-scripts](https://github.com/gravicappa/im-scripts)
 
-  * ii
-  * inotify-tools
+non-copyright
+-------------
 
-unlicense
----------
+code and text for `iii` `tmiii` and `notifiii` are unlicensed.
+see UNLICENSE file and [unlicense.org](http://unlicense.org/) for more information.
 
-`iii` and `notifiii`: code and text are unlicensed.
-see UNLICENSE file and [unlicense.org](http://unlicense.org/).
-
-original hacks by [Ivan c00kiemon5ter V Kanakarakis](http://c00kiemon5ter.github.com)
+original hacks by [Ivan c00kiemon5ter V Kanakarakis](http://c00kiemon5ter.github.com).
 if you have cookies, share :]
 
