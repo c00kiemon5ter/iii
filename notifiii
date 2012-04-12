@@ -22,7 +22,7 @@ while read -r; do
     # if network is empty then action is on the network view
     test -z "$n" && n="$c" c=""
 
-    opts=( h=50 r=true i="$i" n="$n" c="$c" )
+    opts=( h=50 i="$i" n="$n" c="$c" )
 
     ## spawn a new tmux window named <channel> in a tmux session named IRC
     env ${opts[*]} tmiii
