@@ -11,9 +11,6 @@ GREP_OPTIONS=""
 trap 'kill -TERM -0' EXIT
 
 while read -r p < <(inotifywait --exclude "in" --format %w -e modify -r "$i"); do
-    read -r date time nick msg < <(tail -n 1 "$p/out")
-    [[ "$nick" == '-!-' ]] && continue
-
     p="${p#$i}" # p=/network/channel
     IFS='/' read -ra arr <<< "$p"
     c="${arr[@]: -1:1}"
@@ -21,6 +18,10 @@ while read -r p < <(inotifywait --exclude "in" --format %w -e modify -r "$i"); d
 
     # if network is empty then action is on the network view
     test -z "$n" && n="$c" c=""
+
+    # ignore server messages
+    read -r date time nick msg < <(tail -n 1 "$i/$n/$c/out")
+    [[ "$nick" == '-!-' ]] && continue
 
     opts=( h=50 i="$i" n="$n" c="$c" )
 
