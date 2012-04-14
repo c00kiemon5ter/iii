@@ -12,8 +12,8 @@ opts=( TERM="${t:-rxvt-unicode}" m="$m" h="$h" s="$s" r=$r u="$u" l="$l" i="$i" 
 ## spawn a new tmux window named <channel> in a tmux session named IRC
 # FIXME: grep fails when c is empty (ie network view)
 if ! tmux list-sessions | grep "^IRC"
-then urxvtc -name "IRC-tmux" -e tmux new-session -s IRC -n "${c###}" "${opts[*]} iii"
-elif ! tmux list-windows -t IRC | grep "${c###}"
-then tmux new-window -t IRC -n "${c###}" "${opts[*]} iii"
+then urxvtc -name "IRC-tmux" -e tmux new-session -s IRC -n "$c" "${opts[*]} iii"
+elif ! tmux list-windows -t IRC | grep "$c"
+then tmux new-window -t IRC -n "$c" "${opts[*]} iii"
 fi
 

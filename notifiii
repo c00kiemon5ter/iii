@@ -28,10 +28,10 @@ while read -r; do
     env ${opts[*]} tmiii
 
     ## send an urgent hint on a background window to notify of new messages
-    if ! tmux list-windows -t IRC | grep "\(NOTICE\|ACTION\) ${c###}\|${c###}.*(active)$"
+    if ! tmux list-windows -t IRC | grep "\(NOTICE\|ACTION\) $c\|$c.*(active)$"
     then if [[ "$msg" =~ "$u" ]]
-        then tmux new-window -d -t IRC -n "NOTICE ${c###}" "printf -- %b '\a'; sleep 4"
-        else tmux new-window -d -t IRC -n "ACTION ${c###}" "printf -- %b '\a'; sleep 4"
+        then tmux new-window -d -t IRC -n "NOTICE $c" "printf -- %b '\a'; sleep 4"
+        else tmux new-window -d -t IRC -n "ACTION $c" "printf -- %b '\a'; sleep 4"
         fi
     fi
 
