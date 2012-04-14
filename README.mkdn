@@ -44,7 +44,11 @@ notifiii
 dependencies
 ------------
 
- * inotify-tools
+ * [notify-tools][in]
+ * [rlwrap][rl] - readline wrapper
+
+  [in]: https://github.com/rvoicilas/inotify-tools/wiki
+  [rl]: http://utopia.knoware.nl/~hlub/rlwrap/
 
 bugs
 ----
