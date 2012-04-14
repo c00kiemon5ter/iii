@@ -25,7 +25,8 @@ rst="$(tput sgr0)"          # reset   \003[0m -- reset
 
 bar="------------------------------------------------------------" # trackbar
 
-[[ -e "$i/$n/$c/out" && -e "$i/$n/$c/in" ]] || exit 1
+[[ -p "$i/$n/$c/in"  ]] || exit 1
+[[ -e "$i/$n/$c/out" ]] || { touch "$i/$n/$c/out" || exit 1; }
 
 mark() {
     read -r date time nick msg < <(tail -n 1 "$i/$n/$c/out")
