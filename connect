@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+: "${ircdir:=$HOME/irc}"
+: "${nick:=$USER}"
+: "${passwd:=""}"
+
+declare -A networks=(
+    [irc.freenode.net]="#foss-aueb #bash"
+    [irc.oftc.net]="#suckless #ii"
+)
+
+for network in "${!networks[@]}"; do
+    rm -f "$ircdir/$network/in"
+    ii -i "$ircdir" -e ssl -n $nick -k $passwd -s "$network" &
+
+    while true; do
+        if [[ ! -e "$ircdir/$network/in" ]]
+        then sleep 1
+        else
+            for channel in ${networks[$network]}
+            do printf -- "/j %s\n" "$channel" > "$ircdir/$network/in"
+            done
+            break
+        fi
+    done &
+done
+
