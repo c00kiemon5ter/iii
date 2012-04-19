@@ -51,6 +51,7 @@ while read -r; do
     [[ "$REPLY" == ":q" ]] && break
     [[ "$REPLY" == ":x" ]] && { mark; break; }
     [[ "$REPLY" == ":m" ]] && { mark; continue; }
+    [[ "$REPLY" =~ ^/me[[:space:]]*. ]] && REPLY="ACTION${REPLY#/me}"
     printf -- "%s\n" "$REPLY"
 done >"$i/$n/$c/in"
 
