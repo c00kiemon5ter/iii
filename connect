@@ -8,6 +8,8 @@ declare -A networks=(
     [irc.oftc.net]="#suckless #ii"
 )
 
+chmod 700 "$ircdir" # some privacy, thanks
+
 for network in "${!networks[@]}"; do
     rm -f "$ircdir/$network/in"
     ii -i "$ircdir" -n $nick -s "$network" -e ssl &
@@ -17,6 +19,7 @@ for network in "${!networks[@]}"; do
         then sleep 1
         else
             printf -- "/j nickserv identify %s\n" "$(<"$ircdir/$network/ident")" > "$ircdir/$network/in"
+            rm -f "$ircdir/$network/nickserv/out" # clean that up - ident passwd is in there
             for channel in ${networks[$network]}
             do printf -- "/j %s\n" "$channel" > "$ircdir/$network/in"
             done
