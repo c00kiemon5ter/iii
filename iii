@@ -38,7 +38,7 @@ stty -echonl -echo
 
 tailf -n "$h" "$i/$n/$c/out" | while read -r date time nick msg; do
     [[ "$nick" =~ ^\<.*\>$ ]] && nick="${nick:1:-1}"
-    $r && [[ "$msg" =~ "$u" ]] && date="$(tput setaf $l)$date" && printf -- '\a'
+    $r && [[ "$msg" =~ $u ]] && date="$(tput setaf $l)$date" && printf -- '\a'
     # value between 1 and 14 - avoid black and white though there's 7 and 8
     # based on the nick length and ascii code of the nick's first letter
     $r && clr="$(tput setaf $(( ((${#nick} + $(printf -- "%d" "'$nick")) % 14) + 1)))" || clr="$grn"
