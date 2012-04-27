@@ -37,8 +37,8 @@ while read -r p < <(inotifywait --exclude "in" --format %w -e modify -r "$i"); d
     fi
 
     ## spawn a new urxvt terminal with IRC-<channel> class name
-    #if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "$c URxvt"
-    #then "${opts[*]}" urxvtc -name "IRC-$c" -e iii
+    #if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "${c:-$n} URxvt"
+    #then env "${opts[@]}" urxvtc -name "IRC-${c:-$n}" -e iii
     #fi
 done
 
