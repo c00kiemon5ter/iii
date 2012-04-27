@@ -47,11 +47,19 @@ tailf -n "$h" "$i/$n/$c/out" | while read -r date time nick msg; do
 done &
 
 while read -r; do
-    [[ -z "$REPLY" ]] && continue;
-    [[ "$REPLY" == ":q" ]] && break
-    [[ "$REPLY" == ":x" ]] && { mark; break; }
-    [[ "$REPLY" == ":m" ]] && { mark; continue; }
-    [[ "$REPLY" =~ ^/me[[:space:]]*. ]] && REPLY="ACTION${REPLY#/me}"
+    case "$REPLY" in
+        :x) mark
+            ;&
+        :q) break
+            ;;
+        :m) mark
+            continue
+            ;;
+        /wi*) REPLY="/j nickserv info ${REPLY#/wi}"
+            ;;
+        /me*) REPLY="ACTION ${REPLY#/me}"
+            ;;
+    esac
     printf -- "%s\n" "$REPLY"
 done >"$i/$n/$c/in"
 
