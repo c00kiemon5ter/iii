@@ -16,7 +16,7 @@
 : "${r:=true}"              # whether to use random colors for nicks
 : "${l:=3}"                 # highlight color
 
-[[ "$1" != "-r" ]] && exec rlwrap -a -s 0 -r -b "(){}[],+=^#;|&%" -S "${c:-$n}> " -pgreen "$0" -r
+[[ "$1" != "-r" ]] && exec rlwrap -a -s 0 -r -b "(){}[],+=^#;|&%" -S "${c:-$n}> " -pgreen "$BASH_SOURCE" -r
 
 blk="$(tput setaf 6)"       # cyan    \003[36m
 grn="$(tput setaf 2)"       # green   \003[31m
