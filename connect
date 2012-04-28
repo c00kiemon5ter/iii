@@ -8,23 +8,33 @@ declare -A networks=(
     [irc.oftc.net]="#suckless #ii"
 ) #musl #cat-v
 
-chmod 700 "$ircdir" # some privacy, thanks
+# some privacy please, thanks
+chmod 700 "$ircdir"
+chmod 600 "$ircdir"/*/ident
 
 for network in "${!networks[@]}"; do
-    rm -f "$ircdir/$network/in"
-    while true; do ii -i "$ircdir" -n $nick -s "$network" -e ssl; done &
-
     while true; do
-        if [[ ! -e "$ircdir/$network/in" ]]
-        then sleep 1
-        else
-            printf -- "/j nickserv identify %s\n" "$(<"$ircdir/$network/ident")" > "$ircdir/$network/in"
-            rm -f "$ircdir/$network/nickserv/out" # clean that up - ident passwd is in there
-            for channel in ${networks[$network]}
-            do printf -- "/j %s\n" "$channel" > "$ircdir/$network/in"
-            done
-            break
-        fi
+        # cleanup
+        rm -f "$ircdir/$network/in"
+
+        # connect to netwrok - password is set through the env var IIPASS
+        ii -i "$ircdir" -n $nick -s "$network" -e ssl &
+        pid="$!"
+
+        # wait for the connection
+        while ! test -p "$ircdir/$network/in"; do sleep 1; done
+
+        # auth to services
+        printf -- "/j nickserv identify %s\n" "$(<"$ircdir/$network/ident")" > "$ircdir/$network/in"
+        rm -f "$ircdir/$network/nickserv/out" # clean that up - ident passwd is in there
+
+        # join channels
+        for channel in ${networks[$network]}
+        do printf -- "/j %s\n" "$channel" > "$ircdir/$network/in"
+        done
+
+        # if connection is lost reconnect
+        wait "$pid"
     done &
 done
 
