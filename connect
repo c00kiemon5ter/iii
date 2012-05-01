@@ -10,7 +10,7 @@ declare -A networks=(
 
 # some privacy please, thanks
 chmod 700 "$ircdir"
-chmod 600 "$ircdir"/*/ident
+chmod 600 "$ircdir"/*/ident &>/dev/null
 
 for network in "${!networks[@]}"; do
     while true; do
@@ -25,7 +25,8 @@ for network in "${!networks[@]}"; do
         while ! test -p "$ircdir/$network/in"; do sleep 1; done
 
         # auth to services
-        printf -- "/j nickserv identify %s\n" "$(<"$ircdir/$network/ident")" > "$ircdir/$network/in"
+        [[ -e "$ircdir/$network/ident" ]] && \
+            printf -- "/j nickserv identify %s\n" "$(<"$ircdir/$network/ident")" > "$ircdir/$network/in"
         rm -f "$ircdir/$network/nickserv/out" # clean that up - ident passwd is in there
 
         # join channels
