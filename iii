@@ -57,7 +57,7 @@ while read -r; do
             ;;
         /wi*) REPLY="/j nickserv info ${REPLY#/wi}"
             ;;
-        /me*) REPLY="ACTION ${REPLY#/me}"
+        /me*) REPLY="ACTION${REPLY#/me}"
             ;;
     esac
     printf -- "%s\n" "$REPLY"
