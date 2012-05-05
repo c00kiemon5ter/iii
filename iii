@@ -48,6 +48,8 @@ done &
 
 while read -r; do
     case "$REPLY" in
+        '') continue
+            ;;
         :x) mark
             ;&
         :q) break
