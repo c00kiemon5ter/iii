@@ -4,9 +4,9 @@
 : "${nick:=$USER}"
 
 declare -A networks=(
-    [irc.freenode.net]="#foss-aueb #bash"
+    [irc.freenode.net]="#foss-aueb #gentoo-el #musl #cat-v"
     [irc.oftc.net]="#suckless #ii"
-) #musl #cat-v
+)
 
 # some privacy please, thanks
 chmod 700 "$ircdir"
