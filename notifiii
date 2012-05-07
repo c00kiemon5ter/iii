@@ -25,20 +25,19 @@ while read -r p < <(inotifywait --exclude "in" --format %w -e modify -r "$i"); d
 
     opts=( h=50 i="$i" n="$n" c="$c" )
 
-    ## spawn a new tmux window named <channel> in a tmux session named IRC
-    env ${opts[*]} tmiii
-
-    ## send an urgent hint on a background window to notify of new messages
-    if ! tmux list-windows -t IRC | grep "\(NOTICE\|ACTION\) $c\|$c.*(active)$"
-    then if [[ "$msg" =~ "$u" ]]
-        then tmux new-window -d -t IRC -n "NOTICE $c" "printf -- %b '\a'; sleep 4"
-        else tmux new-window -d -t IRC -n "ACTION $c" "printf -- %b '\a'; sleep 4"
-        fi
-    fi
+    # ## spawn a new tmux window named <channel> in a tmux session named IRC
+    # env ${opts[*]} tmiii
+    # ## send an urgent hint on a background window to notify of new messages
+    # if ! tmux list-windows -t IRC | grep "\(NOTICE\|ACTION\) $c\|$c.*(active)$"
+    # then if [[ "$msg" =~ "$u" ]]
+    #     then tmux new-window -d -t IRC -n "NOTICE $c" "printf -- %b '\a'; sleep 4"
+    #     else tmux new-window -d -t IRC -n "ACTION $c" "printf -- %b '\a'; sleep 4"
+    #     fi
+    # fi
 
     ## spawn a new urxvt terminal with IRC-<channel> class name
-    #if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "${c:-$n} URxvt"
-    #then env "${opts[@]}" urxvtc -name "IRC-${c:-$n}" -e iii
-    #fi
+    if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "${c:-$n} URxvt"
+    then env "${opts[@]}" urxvtc -name "IRC-${c:-$n}" -e iii
+    fi
 done
 
