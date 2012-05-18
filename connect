@@ -3,36 +3,50 @@
 : "${ircdir:=$HOME/irc}"
 : "${nick:=$USER}"
 
-declare -A networks=(
-    [irc.freenode.net]="#foss-aueb #gentoo-el #musl #cat-v"
-    [irc.oftc.net]="#suckless #ii"
-)
+freenode() {
+    server='irc.freenode.net'
+    channels=('#foss-aueb' '#gentoo-el' '#musl' '#cat-v')
+}
+
+oftc() {
+    server='irc.oftc.net'
+    channels=('#suckless' '#ii')
+}
+
+grnet() {
+    server='rea.irc.gr'
+    channels=('#gnu' '#demo-gr')
+    port=9667
+}
+
+networks=('freenode' 'oftc' 'grnet')
 
 # some privacy please, thanks
 chmod 700 "$ircdir"
 chmod 600 "$ircdir"/*/ident &>/dev/null
 
-for network in "${!networks[@]}"; do
+for network in "${networks[@]}"; do
+    unset server channels port
+    "$network"
+
     while true; do
         # cleanup
-        rm -f "$ircdir/$network/in"
+        rm -f "$ircdir/$server/in"
 
         # connect to netwrok - password is set through the env var IIPASS
-        ii -i "$ircdir" -n $nick -s "$network" -e ssl &
+        ii -i "$ircdir" -n "$nick" -s "$server" -p "${port:-6697}" -e ssl &
         pid="$!"
 
         # wait for the connection
-        while ! test -p "$ircdir/$network/in"; do sleep 1; done
+        while ! test -p "$ircdir/$server/in"; do sleep 1; done
 
         # auth to services
-        [[ -e "$ircdir/$network/ident" ]] && \
-            printf -- "/j nickserv identify %s\n" "$(<"$ircdir/$network/ident")" > "$ircdir/$network/in"
-        rm -f "$ircdir/$network/nickserv/out" # clean that up - ident passwd is in there
+        if [[ -e "$ircdir/$server/ident" ]]
+        then printf "/j nickserv identify %s %s\n" "$nick" "$(cat "$ircdir/$server/ident")" > "$ircdir/$server/in"
+        fi && rm -f "$ircdir/$server/nickserv/out" # clean that up - ident passwd is in there
 
         # join channels
-        for channel in ${networks[$network]}
-        do printf -- "/j %s\n" "$channel" > "$ircdir/$network/in"
-        done
+        printf "/j %s\n" "${channels[@]}" > "$ircdir/$server/in"
 
         # if connection is lost reconnect
         wait "$pid"
