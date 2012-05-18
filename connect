@@ -42,7 +42,7 @@ for network in "${networks[@]}"; do
 
         # auth to services
         if [[ -e "$ircdir/$server/ident" ]]
-        then printf "/j nickserv identify %s %s\n" "$nick" "$(cat "$ircdir/$server/ident")" > "$ircdir/$server/in"
+        then printf "/j nickserv identify %s\n" "$(cat "$ircdir/$server/ident")" > "$ircdir/$server/in"
         fi && rm -f "$ircdir/$server/nickserv/out" # clean that up - ident passwd is in there
 
         # join channels
