@@ -7,7 +7,7 @@
 # accepts all env vars iii accepts plus 't' which sets the terminal
 
 ## collect options from env - all opts to iii should be set here
-opts=( TERM="${t:-rxvt-unicode}" m="$m" h="$h" s="$s" r=$r u="$u" l="$l" i="$i" n="$n" c="$c" )
+opts=( TERM="${t:-rxvt-unicode}" m="$m" h="$h" r=$r u="$u" l="$l" i="$i" n="$n" c="$c" )
 
 ## spawn a new tmux window named <channel> in a tmux session named IRC
 if ! tmux list-sessions | grep "^IRC"
