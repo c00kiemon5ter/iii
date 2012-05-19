@@ -10,27 +10,29 @@ GREP_OPTIONS=""
 
 trap 'kill -TERM -0' EXIT
 
-while read -r p < <(inotifywait --exclude "in" --format %w -e modify -r "$i"); do
-    p="${p#$i}" # p=/network/channel
-    IFS='/' read -ra arr <<< "$p"
-    c="${arr[@]: -1:1}"
-    n="${arr[@]: -2:1}"
+inotifywait -m --exclude "in" --format %w -e modify -r "$i" | {
+    while read -r p; do # the path to dir where the event came from
+        p="${p#$i}" # p=/network/channel
+        IFS='/' read -ra arr <<< "$p"
+        c="${arr[@]: -1:1}"
+        n="${arr[@]: -2:1}"
 
-    # if network is empty then action is on the network view
-    test -z "$n" && n="$c" c=""
+        # if network is empty then action is on the network view
+        test -z "$n" && n="$c" c=""
 
-    # ignore server messages
-    read -r date time nick msg < <(tail -n 1 "$i/$n/$c/out")
-    [[ "$nick" == '-!-' ]] && continue
+        # ignore server messages
+        read -r date time nick msg < <(tail -n 1 "$i/$n/$c/out")
+        [[ "$nick" == '-!-' ]] && continue
 
-    opts=( h=50 i="$i" n="$n" c="$c" )
+        opts=( h=50 i="$i" n="$n" c="$c" )
 
-    ## spawn a new tmux window named <channel> in a tmux session named IRC
-    env ${opts[*]} tmiii
+        ## spawn a new tmux window named <channel> in a tmux session named IRC
+        env ${opts[*]} tmiii
 
-    # ## spawn a new urxvt terminal with IRC-<channel> class name
-    # if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "${c:-$n} URxvt"
-    # then env "${opts[@]}" urxvtc -name "IRC-${c:-$n}" -e iii
-    # fi
-done
+        # ## spawn a new urxvt terminal with IRC-<channel> class name
+        # if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "${c:-$n} URxvt"
+        # then env "${opts[@]}" urxvtc -name "IRC-${c:-$n}" -e iii
+        # fi
+    done
+}
 
