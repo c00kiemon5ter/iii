@@ -13,18 +13,15 @@ trap 'kill -TERM -0' EXIT
 inotifywait -m --exclude "in" --format %w -e modify -r "$i" | {
     while read -r p; do # the path to dir where the event came from
         # ignore server messages
-        tail -n 1 "$p/out" | {
-            read -r date time nick mesg
-            [ "$nick" = '-!-' ] && exit
-        }
+        nick="$(tail -n1 "$p/out" | cut -d" " -f3)"
+        [ "$nick" = '-!-' ] && continue
 
-        # break path down: p=/ircdir/network/channel/file
-        p="${p#$i}"  # p=/network/channel/file
-        f="${p##*/}" # f=file
-        p="${p%/*}"  # p=/network/channel
-        c="${p##*/}" # c=channel
-        p="${p%/*}"  # p=/network
-        n="${p##*/}" # n=network
+        # break path down # p=/ircdir/network/channel/
+        p="${p#$i}"       # p=/network/channel/
+        p="${p%/*}"       # p=/network/channel
+        c="${p##*/}"      # c=channel
+        p="${p%/*}"       # p=/network
+        n="${p##*/}"      # n=network
         # if network is empty then action is on the network view
         [ -z "$n" ] && n="$c" c=""
 
