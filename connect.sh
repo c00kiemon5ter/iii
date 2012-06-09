@@ -5,7 +5,7 @@
 
 freenode() {
     server='irc.freenode.net'
-    channels="#foss-aueb #gentoo-el #musl #cat-v"
+    channels="#musl #cat-v"
 }
 
 oftc() {
@@ -13,13 +13,7 @@ oftc() {
     channels="#suckless #ii"
 }
 
-grnet() {
-    server='rea.irc.gr'
-    channels="#gnu #demo-gr"
-    port=9667
-}
-
-networks="freenode oftc grnet"
+networks="freenode oftc"
 
 # some privacy please, thanks
 chmod 700 "$ircdir"
