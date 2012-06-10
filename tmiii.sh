@@ -13,6 +13,6 @@ opts="TERM="${t:-rxvt-unicode}" m="$m" h="$h" r=$r u="$u" l="$l" i="$i" n="$n" c
 if ! tmux list-sessions | grep "^IRC"
 then urxvtc -name "IRC-tmux" -e tmux new-session -s IRC -n "${c:-$n}" "$opts iii.sh"
 elif ! tmux list-windows -t IRC | grep "${c:-$n}"
-then tmux new-window -t IRC -n "${c:-$n}" "$opts iii.sh"
+then tmux new-window -t IRC -n "${c:-$n}" -d "$opts iii.sh"
 fi
 
