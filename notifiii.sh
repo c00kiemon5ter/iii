@@ -10,7 +10,7 @@ GREP_OPTIONS=""
 
 trap 'kill -TERM -0' EXIT
 
-inotifywait -m --exclude "in" --format %w -e modify -r "$i" | {
+inotifywait -m --exclude "in" --format %w -e modify -r "$i" | \
     while read -r p; do # the path to dir where the event came from
         # ignore server messages
         nick="$(tail -n1 "$p/out" | cut -d" " -f3)"
@@ -35,5 +35,4 @@ inotifywait -m --exclude "in" --format %w -e modify -r "$i" | {
         # then env $opts urxvtc -name "IRC-${c:-$n}" -e iii.sh
         # fi
     done
-}
 
