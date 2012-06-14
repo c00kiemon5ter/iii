@@ -66,6 +66,12 @@ while read -r line; do
             ;;
         /op*) line="/j chanserv op $c ${line##* }"
             ;;
+        /bans) line="/j chanserv akick $c LIST"
+            ;;
+        /ban*) line="/j chanserv akick $c ADD ${line##* } -- goodbye"
+            ;;
+        /unban*) line="/j chanserv akick $c DEL ${line##* }"
+            ;;
     esac
     printf "%s\n" "$line"
 done >"$i/$n/$c/in"
