@@ -64,6 +64,8 @@ while read -r line; do
             ;;
         /names) line="/names $c"
             ;;
+        /op*) line="/j chanserv op $c ${line##* }"
+            ;;
     esac
     printf "%s\n" "$line"
 done >"$i/$n/$c/in"
