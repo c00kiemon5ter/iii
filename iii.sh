@@ -66,6 +66,8 @@ while read -r line; do
             ;;
         /op*) line="/j chanserv op $c ${line##* }"
             ;;
+        /deop*) line="/j chanserv deop $c ${line##* }"
+            ;;
         /bans) line="/j chanserv akick $c LIST"
             ;;
         /ban*) line="/j chanserv akick $c ADD ${line##* } -- goodbye"
