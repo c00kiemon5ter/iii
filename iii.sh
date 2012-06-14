@@ -62,6 +62,8 @@ while read -r line; do
             ;;
         /me*) line="ACTION${line#/me}"
             ;;
+        /names) line="/names $c"
+            ;;
     esac
     printf "%s\n" "$line"
 done >"$i/$n/$c/in"
