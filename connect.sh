@@ -21,14 +21,15 @@ chmod 600 "$ircdir"/*/ident &>/dev/null
 
 for network in $networks; do
     unset server channels port
-    "$network"
+    "$network" # set the appropriate vars
 
     while true; do
         # cleanup
         rm -f "$ircdir/$server/in"
 
-        # connect to netwrok - password is set through the env var IIPASS
-        ii -i "$ircdir" -n "$nick" -s "$server" -p "${port:-6697}" -e ssl &
+        # connect to netwrok
+        # password is set through the env var synonym to the network name
+        ii -i "$ircdir" -n "$nick" -k "$network" -s "$server" -p "${port:-6697}" &
         pid="$!"
 
         # wait for the connection
