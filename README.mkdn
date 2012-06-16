@@ -18,12 +18,17 @@ options are passed as enviromental variables.
 
 typical usage would be:
 
-    c=#suckless iii
-    n=irc.freenode.net c=#musl iii
+``` sh
+c=#suckless iii.sh
+h=50 n=irc.freenode.net c=#musl iii.sh
+```
 
 to quit `iii` just send `:q`.
 to mark the current spot on the conversation send `:m`.
 to quit and mark send `:x`.
+
+some common commands are supported,
+like `/op` `/deop` `/ban` `/unban` `/names` `/wi`
 
 tmiii
 -----
@@ -32,6 +37,10 @@ tmiii
 each `iii` instance inside `tmux` is on each own window, named by the channel it shows.
 `tmiii` acceps the same env vars as `iii` plus `t` to set the TERM variable, used by `tmux`.
 
+``` sh
+l=false h=50 n=irc.freenode.net c=#cat-v tmiii.sh
+```
+
 notifiii
 --------
 
@@ -39,7 +48,35 @@ notifiii
 `notifiii` by default ignores joins, parts, quits and any message from the network (user `-!-`).
 `notifiii` accepts the irc root directory - by default `$HOME/irc` - to monitor as an argument.
 
-    notifiii /tmp/irc
+``` sh
+notifiii.sh /tmp/irc
+```
+
+connect
+-------
+
+`connect` is a script to automatically connect `ii` to the specified networks and channels.
+in addition, it knows when the connection was dropped and automatically tries to reconnect.
+moreover, given a file named _`identify`_, containing the identification passphrase of the user,
+it sends an identify command to the _nickserv_, to automatically identify the connected user.
+the _`identify`_ file should be under `/path/to/irc/dir/network/`
+
+as above `connect` accepts two arguments in the form of env vars,
+`nick` which sets the user's nickname, else it will use `$USER`,
+and `ircdir` which specifies the base irc directory.
+
+``` sh
+$  freenode=foo oftc=bar connect.sh
+$ ^ notice the extra space here
+$ this serves as to ignore the command from being saved in the shell history
+$ one should also close the terminal or clear the scrollback buffer
+$ so that the command cannot be seen on scroll up
+```
+
+edit this script to add the networks you'd like to autoconnect as a function,
+which sets the server name, the channels on that server to autoconnect as a
+list of strings separated by a space, and the port to use for the connection.
+add your network to the `networks` list, and you're set.
 
 dependencies
 ------------
