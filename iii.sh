@@ -74,6 +74,8 @@ while read -r line; do
             ;;
         /unban*) line="/j chanserv akick $c DEL ${line##* }"
             ;;
+        /t) line="/topic $c"
+            ;;
     esac
     printf "%s\n" "$line"
 done >"$i/$n/$c/in"
