@@ -10,11 +10,12 @@ GREP_OPTIONS=""
 
 trap 'kill -TERM -0' EXIT
 
-inotifywait -m --exclude "^in$" --format %w -e modify -r "$i" | \
-    while read -r p; do # the path to dir where the event came from
+inotifywait -m --exclude "/in$" --format "%w %f" -e modify -r "$i" | \
+    while read -r p f; do
+        # ignore notifications files other than 'out'
+        [ "$f" != "out" ] && continue
         # ignore server messages
-        nick="$(tail -n1 "$p/out" | cut -d" " -f3)"
-        [ "$nick" = '-!-' ] && continue
+        [ "$(awk '{ n=$3 } END { print n }' "$p$f")" = '-!-' ] && continue
 
         # break path down # p=/ircdir/network/channel/
         p="${p#$i}"       # p=/network/channel/
