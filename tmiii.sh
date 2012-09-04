@@ -10,9 +10,9 @@
 opts="TERM="${t:-rxvt-unicode}" m="$m" h="$h" r=$r u="$u" l="$l" i="$i" n="$n" c="$c""
 
 ## spawn a new tmux window named <channel> in a tmux session named IRC
-if ! tmux list-sessions | grep "^IRC"
+if ! tmux list-sessions | awk -v r=1 '$1 == "IRC:" { exit r=0 } END { exit r }'
 then urxvtc -name "IRC-tmux" -e tmux new-session -s IRC -n "${c:-$n}" "$opts iii.sh"
-elif ! tmux list-windows -t IRC | grep "${c:-$n}"
+elif ! tmux list-windows -t IRC | awk -v r=1 -v m="${c:-$n}" '$2 == m { print $2; exit r=0 } END { exit r }'
 then tmux new-window -t IRC -n "${c:-$n}" -d "$opts iii.sh"
 fi
 
