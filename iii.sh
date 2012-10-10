@@ -46,8 +46,8 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
     mesg="$(echo "$mesg" \
         | sed "s#\(^\|[[:space:]*_]\)/\([^[:space:]\]*\)/\([,*_[:space:]]\|$\)#\1$(tput sitm)/\2/$(tput ritm)\3#g" \
         | sed "s#\(^\|[[:space:]*m]\)_\([^[:space:]]*\)_\([,*[:space:]]\|$\)#\1$(tput smul)\2$(tput rmul)\3#g"   \
-        | sed "s#\(^\|[[:space:]]\)\*\([^[:space:]]*\)\*\([,[:space:]]\|$\)#\1$(tput rev) \2 $(tput sgr0)$wht\3#g" \
-        | sed "s#\(http\|www\)[^[:space:]]\+#$(tput smul)&$(tput rmul)#g"
+        | sed "s#\(^\|[[:space:]]\)\*\([^[:space:]]*\)\*\([,[:space:]]\|$\)#\1$(tput bold; tput setaf 1)*\2*$wht\3#g" \
+        | sed "s#\(http\|www\)://[^[:space:]]\+#$(tput smul)&$(tput rmul)#g"
         )"
 
     # value between 1 and 14 - avoid black and white (though there's 7 and 8 in there)
