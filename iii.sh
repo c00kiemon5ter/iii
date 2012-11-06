@@ -46,12 +46,24 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
 
     # pretify special symbols around words
     # *bold* _underline_ /italics/ and underline urls
-    mesg="$(echo "$mesg" \
-        | sed "s#\(^\|[[:space:]*_]\)/\([^[:space:]\]*\)/\([,*_[:space:]]\|$\)#\1$(tput sitm)/\2/$(tput ritm)\3#g" \
-        | sed "s#\(^\|[[:space:]*m]\)_\([^[:space:]]*\)_\([,*[:space:]]\|$\)#\1$(tput smul)\2$(tput rmul)\3#g"   \
-        | sed "s#\(^\|[[:space:]]\)\*\([^[:space:]]*\)\*\([,[:space:]]\|$\)#\1$(tput bold; tput setaf 1)*\2*$wht\3#g" \
-        | sed "s#\(http\|www\)://[^[:space:]]\+#$(tput smul)&$(tput rmul)#g"
-        )"
+    mesg="$(echo "$mesg" | awk -vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
+                               -vus="$(tput smul; tput setaf 03)" -vue="$(tput rmul)${wht}" \
+                               -vbs="$(tput bold; tput setaf 01)" -vbe="$(tput sgr0)${wht}" \
+                               -vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
+    {
+        for (i=1; i<=NF; i++)
+            if ($i ~ /^_[^_]/ && $i ~ /[^_]_$/) {
+                sub($i, us substr($i, 2, length($i) - 2) ue)
+            } else if ($i ~ /^[*]/ && $i ~ /[*]$/) {
+                sub($i"[*]", bs $i be)
+            } else if ($i ~ /^[/]/ && $i ~ /[/]$/) {
+                sub($i, is $i ie)
+            } else if ($i ~ /^http/) {
+                sub($i, ls $i le)
+            }
+        print
+    }'
+    )"
 
     # value between 1 and 14 - avoid black and white (though there's 7 and 8 in there)
     # color value is based on the length and first and second letter of the nick
