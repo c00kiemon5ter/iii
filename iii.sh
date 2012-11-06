@@ -52,11 +52,11 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
                                -vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
     {
         for (i=1; i<=NF; i++)
-            if ($i ~ /^_[^_]/ && $i ~ /[^_]_$/) {
+            if ($i ~ /^_[^_].*[^_]_$/) {
                 sub($i, us substr($i, 2, length($i) - 2) ue)
-            } else if ($i ~ /^[*]/ && $i ~ /[*]$/) {
+            } else if ($i ~ /^[*].*[*]$/) {
                 sub($i"[*]", bs $i be)
-            } else if ($i ~ /^[/]/ && $i ~ /[/]$/) {
+            } else if ($i ~ /^[/].*[/]$/) {
                 sub($i, is $i ie)
             } else if ($i ~ /^http/) {
                 sub($i, ls $i le)
