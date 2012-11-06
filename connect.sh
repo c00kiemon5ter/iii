@@ -3,16 +3,18 @@
 : "${ircdir:=$HOME/irc}"
 : "${nick:=$USER}"
 
+# server info functions
 freenode() {
     server='irc.freenode.net'
-    channels="#musl #cat-v"
+    channels="#foo #bar"
 }
 
 oftc() {
     server='irc.oftc.net'
-    channels="#suckless #ii"
+    channels="#xyz #abc"
 }
 
+# these match the functions above
 networks="freenode oftc"
 
 # some privacy please, thanks
