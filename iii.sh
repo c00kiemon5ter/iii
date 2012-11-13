@@ -50,20 +50,29 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
                                -vus="$(tput smul; tput setaf 03)" -vue="$(tput rmul)${wht}" \
                                -vbs="$(tput bold; tput setaf 01)" -vbe="$(tput sgr0)${wht}" \
                                -vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
-    {
-        for (i=1; i<=NF; i++)
-            if ($i ~ /^_[^_].*[^_]_$/) {
-                sub($i, us substr($i, 2, length($i) - 2) ue)
-            } else if ($i ~ /^[*].*[*]$/) {
-                sub($i"[*]", bs $i be)
-            } else if ($i ~ /^[/].*[/]$/) {
-                sub($i, is $i ie)
-            } else if ($i ~ /^http/) {
-                sub($i, ls $i le)
-            }
-        print
-    }'
-    )"
+        function replace(l, s, r) {
+            p = index(l, s) - 1
+            n = p + length(s) + 1
+            l = substr(l, 1, p) r substr(l, n)
+            return l
+        }
+
+        {
+            line = $0
+
+            for (i=1; i<=NF; i++)
+                if ($i ~ /^http/) {
+                    line = replace($0, $i, ls $i le)
+                } else if ($i ~ /^_[^_].*[^_]_$/) {
+                    line = replace($0, $i, us substr($i, 2, length($i) - 2) ue)
+                } else if ($i ~ /^[*].*[*]$/) {
+                    line = replace($0, $i, bs $i be)
+                } else if ($i ~ /^[/].*[/]$/) {
+                    line = replace($0, $i, is $i ie)
+                }
+            print line
+        }
+    ')"
 
     # value between 1 and 14 - avoid black and white (though there's 7 and 8 in there)
     # color value is based on the length and first and second letter of the nick
