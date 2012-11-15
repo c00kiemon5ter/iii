@@ -62,13 +62,13 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
 
             for (i=1; i<=NF; i++)
                 if ($i ~ /^http/) {
-                    line = replace($0, $i, ls $i le)
+                    line = replace(line, $i, ls $i le)
                 } else if ($i ~ /^_[^_].*[^_]_$/) {
-                    line = replace($0, $i, us substr($i, 2, length($i) - 2) ue)
+                    line = replace(line, $i, us substr($i, 2, length($i) - 2) ue)
                 } else if ($i ~ /^[*].*[*]$/) {
-                    line = replace($0, $i, bs $i be)
+                    line = replace(line, $i, bs $i be)
                 } else if ($i ~ /^[/].*[/]$/) {
-                    line = replace($0, $i, is $i ie)
+                    line = replace(line, $i, is $i ie)
                 }
             print line
         }
