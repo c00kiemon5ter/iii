@@ -61,7 +61,7 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
             line = $0
 
             for (i=1; i<=NF; i++)
-                if ($i ~ /^http/) {
+                if ($i ~ /^(http|ftp|ssh).+/) {
                     line = replace(line, $i, ls $i le)
                 } else if ($i ~ /^_[^_].*[^_]_$/) {
                     line = replace(line, $i, us substr($i, 2, length($i) - 2) ue)
