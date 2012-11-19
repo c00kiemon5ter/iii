@@ -8,7 +8,7 @@
 
 : "${u:=$USER}"             # the user's nickname
 : "${i:=$HOME/irc}"         # root irc dir
-: "${n:=irc.oftc.net}"      # network
+: "${n:=irc.freenode.net}"  # network
 : "${c:=""}"                # channel - empty for network (default)
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
