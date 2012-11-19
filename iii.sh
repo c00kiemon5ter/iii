@@ -30,7 +30,7 @@ bar="------------------------------------------------------------" # trackbar
 mark() {
     tail -n1 "$i/$n/$c/out" | {
         read -r date time nick mesg
-        [ "$mesg" != "$bar" ] && printf "%s -!- %s\n" "$(date +"%F %R")" "$bar" >>"$i/$n/$c/out"
+        [ "$mesg" != "$bar" ] && printf '%s -!- %s\n' "$(date +"%F %R")" "$bar" >>"$i/$n/$c/out"
     }
 }
 
@@ -92,20 +92,20 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
     # as one goes down the list the distribution gets more and more unequal.
     # ommited are functions that gave way too bad results (ie "%d & %d & %d").
     # occurances of white (result:7) and black(result:8) have also been used as classification factors.
-    $r && clr="$(tput setaf $(( (( $(printf "%d ^ %d + %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf "%d + %d + %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf "%d * %d + %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf "%d + %d ^ %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf "%d ^ %d ^ %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf "%d ^ %d * %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf "%d * %d ^ %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf "%d | %d * %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf "%d & %d ^ %d" "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    $r && clr="$(tput setaf $(( (( $(printf '%d ^ %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    #$r && clr="$(tput setaf $(( (( $(printf '%d + %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    #$r && clr="$(tput setaf $(( (( $(printf '%d * %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    #$r && clr="$(tput setaf $(( (( $(printf '%d + %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    #$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    #$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d * %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    #$r && clr="$(tput setaf $(( (( $(printf '%d * %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    #$r && clr="$(tput setaf $(( (( $(printf '%d | %d * %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+    #$r && clr="$(tput setaf $(( (( $(printf '%d & %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
 
     # let server name have a static color across all randomization functions
     $r && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
     case "$mesg" in ACTION*) mesg="$clr$nick$rst:${mesg#ACTION}" nick="*" clr="$grn" ;; esac
-    printf "\r$blk%s $clr%*.*s $blk| $wht%s$rst\n" "$date $time" "$m" "$m" "$nick" "$mesg"
+    printf '\r%s %*.*s %s %s\n' "$blk$date $time$clr" "$m" "$m" "$nick" "$blk|$wht" "$mesg$rst"
 done &
 
 while read -r line; do
@@ -138,6 +138,6 @@ while read -r line; do
         /t) line="/topic $c"
             ;;
     esac
-    printf "%s\n" "$line"
+    printf '%s\n' "$line"
 done >"$i/$n/$c/in"
 
