@@ -87,12 +87,10 @@ dependencies
   [in]: https://github.com/rvoicilas/inotify-tools/wiki
   [rl]: http://utopia.knoware.nl/~hlub/rlwrap/
 
- * bash, if you use the _bash_ branch
-
 bugs
 ----
 
- * inotify is not portable.
+ * inotify is not portable - linux only interface.
 
 related
 -------
