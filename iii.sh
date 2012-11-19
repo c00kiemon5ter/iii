@@ -37,7 +37,11 @@ mark() {
 trap "stty '$(stty -g)'; kill -TERM -0" EXIT
 stty -echonl -echo
 
-tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
+tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
+    date="${mesg%% *}" mesg="${mesg#* }"
+    time="${mesg%% *}" mesg="${mesg#* }"
+    nick="${mesg%% *}" mesg="${mesg#* }"
+
     case "$nick" in \<*\>) nick="${nick#<}" nick="${nick%>}"; printf '\a' ;; esac
     case "$mesg" in *$u*) date="$(tput setaf $l)$date" ;; esac
 
@@ -108,7 +112,7 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
     printf '\r%s %*.*s %s %s\n' "$blk$date $time$clr" "$m" "$m" "$nick" "$blk|$wht" "$mesg$rst"
 done &
 
-while read -r line; do
+while IFS= read -r line; do
     case "$line" in
         '') continue
             ;;
