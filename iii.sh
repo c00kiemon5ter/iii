@@ -41,8 +41,17 @@ tail -f -n "$h" "$i/$n/$c/out" | while read -r date time nick mesg; do
     case "$nick" in \<*\>) nick="${nick#<}" nick="${nick%>}"; printf '\a' ;; esac
     case "$mesg" in *$u*) date="$(tput setaf $l)$date" ;; esac
 
-    # handle relay network nicks
-    case "$mesg" in /NNNC/*) nick="${mesg%%>*}@$nick" mesg="${mesg#/NNNC/*> }" nick="${nick#/*/}" ;; esac
+    # handle relay network nicks and messages
+    # transform '<relay> /netA/nickA> /netB/nickB> mesg'
+    # to '<nickA@relay> nickB> mesg'
+    case "$mesg" in
+        /*/*\>*)
+            nick="${mesg%%>*}@$nick"
+            mesg="${mesg#/*> }"
+            nick="${nick#/*/}"
+            case "$mesg" in /*/*\>*) mesg="${mesg#/*/}" ;; esac
+            ;;
+    esac
 
     # pretify special symbols around words
     # *bold* _underline_ /italics/ and underline urls
