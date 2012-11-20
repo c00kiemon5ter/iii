@@ -57,9 +57,9 @@ connect
 
 `connect` is a script to automatically connect `ii` to the specified networks and channels.
 in addition, it knows when the connection was dropped and automatically tries to reconnect.
-moreover, given a file named _`identify`_, containing the identification passphrase of the user,
+moreover, given a file named `ident`, containing the identification passphrase of the user,
 it sends an identify command to the _nickserv_, to automatically identify the connected user.
-the _`identify`_ file should be under `/path/to/irc/dir/network/`
+the `ident` file should be under `/path/to/irc/dir/network/`
 
 as above `connect` accepts two arguments in the form of env vars,
 `nick` which sets the user's nickname, else it will use `$USER`,
