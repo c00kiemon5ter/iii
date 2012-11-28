@@ -15,7 +15,7 @@
 : "${h:=20}"                # lines from history
 : "${p:=1}"                 # prefity - colors and special patterns
 
-[ "$1" != '-r' ] && exec rlwrap -a -r -S "${c:-$s}> " -pGREEN "$0" -r
+[ "$1" != "-r" ] && exec rlwrap -a -S "${c:-$s}> " -pGREEN "$0" -r
 
 infile="$i/$s/$c/in"
 outfile="$i/$s/$c/out"
