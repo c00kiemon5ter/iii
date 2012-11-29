@@ -123,21 +123,21 @@ while IFS= read -r line; do
         :m) mark
             continue
             ;;
-        /wi*) line="/j nickserv info ${line#/wi}"
+        /wi" "*) line="/j nickserv info ${line#/wi}"
             ;;
-        /me*) line="ACTION${line#/me}"
+        /me" "*) line="ACTION${line#/me}"
             ;;
         /names) line="/names $c"
             ;;
-        /op*) line="/j chanserv op $c ${line##* }"
+        /op" "*) line="/j chanserv op $c ${line##* }"
             ;;
-        /deop*) line="/j chanserv deop $c ${line##* }"
+        /deop" "*) line="/j chanserv deop $c ${line##* }"
             ;;
         /bans) line="/j chanserv akick $c LIST"
             ;;
-        /ban*) line="/j chanserv akick $c ADD ${line##* } -- goodbye"
+        /ban" "*) line="/j chanserv akick $c ADD ${line##* } -- goodbye"
             ;;
-        /unban*) line="/j chanserv akick $c DEL ${line##* }"
+        /unban" "*) line="/j chanserv akick $c DEL ${line##* }"
             ;;
         /t) line="/topic $c"
             ;;
