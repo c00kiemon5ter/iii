@@ -34,7 +34,7 @@ mark() {
     }
 }
 
-trap "stty '$(stty -g)'; kill -TERM -0" EXIT
+trap "stty '$(stty -g)'; kill -TERM 0" EXIT
 stty -echonl -echo
 
 tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
