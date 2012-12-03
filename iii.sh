@@ -49,11 +49,11 @@ tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
     # transform '<relay> /netA/nickA> /netB/nickB> mesg'
     # to '<nickA@relay> nickB> mesg'
     case "$mesg" in
-        /*/*\>*)
-            nick="${mesg%%>*}@$nick"
-            mesg="${mesg#/*> }"
+        /*/*[\>:]*)
+            nick="${mesg%%[>:]*}@$nick"
+            mesg="${mesg#/*[>:] }"
             nick="${nick#/*/}"
-            case "$mesg" in /*/*\>*) mesg="${mesg#/*/}" ;; esac
+            case "$mesg" in /*/*[\>:]*) mesg="${mesg#/*/}" ;; esac
             ;;
     esac
 
