@@ -14,6 +14,7 @@
 : "${h:=20}"                # lines from history
 : "${r:=true}"              # whether to use random colors for nicks
 : "${l:=3}"                 # highlight color
+: "${f:=120}"               # max characters per mesg - fold after limit
 
 [ "$1" != "-r" ] && exec rlwrap -a -s 0 -r -b "(){}[],+=^#;|&%" -S "${c:-$n}> " -pgreen "$0" -r
 
@@ -109,7 +110,12 @@ tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
     # let server name have a static color across all randomization functions
     $r && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
     case "$mesg" in ACTION*) mesg="$clr$nick$rst:${mesg#ACTION}" nick="*" clr="$grn" ;; esac
-    printf '\r%s %*.*s %s %s\n' "$blk$date $time$clr" "$m" "$m" "$nick" "$blk|$wht" "$mesg$rst"
+
+    # fold lines breaking on spaces if message is greater than 'f' chars
+    echo "$mesg" | fold -s -w "$f" | \
+        while IFS= read -r line
+        do printf '\r%s %s %*.*s %s %s\n' "${blk}${date}" "${time}${clr}" "${m}" "${m}" "${nick}" "${blk}|${wht}" "${line}${rst}"
+        done
 done &
 
 while IFS= read -r line; do
