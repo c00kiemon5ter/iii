@@ -15,7 +15,8 @@ inotifywait -m --exclude "/in$" --format "%w %f" -e modify -r "$i" | \
         # ignore notifications files other than 'out'
         [ "$f" != "out" ] && continue
         # ignore server messages
-        [ "$(awk '{ n=$3 } END { print n }' "$p$f")" = '-!-' ] && continue
+        nickname="$(awk '{ n=$3 } END { print n }' "$p$f")"
+        [ "$nickname" = '<-!->' -o "$nickname" = '-!-' ] && continue
 
         # break path down # p=/ircdir/network/channel/
         p="${p#$i}"       # p=/network/channel/
