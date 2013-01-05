@@ -31,7 +31,7 @@ bar="------------------------------------------------------------" # trackbar
 mark() {
     tail -n1 "$i/$n/$c/out" | {
         read -r date time nick mesg
-        [ "$mesg" != "$bar" ] && printf '%s -!- %s\n' "$(date +"%F %R")" "$bar" >>"$i/$n/$c/out"
+        [ "$mesg" != "$bar" ] && printf '%s -!- %.*s\n' "$(date +"%F %R")" "$f" "${bar}${bar}${bar}" >>"$i/$n/$c/out"
     }
 }
 
