@@ -43,7 +43,8 @@ tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
     time="${mesg%% *}" mesg="${mesg#* }"
     nick="${mesg%% *}" mesg="${mesg#* }"
 
-    case "$nick" in \<*\>) nick="${nick#<}" nick="${nick%>}"; printf '\a' ;; esac
+    nick="${nick#<}" nick="${nick%>}"
+    [ "$nick" != '-!-' ] && printf '\a'
     case "$mesg" in *$u*) date="$(tput setaf $l)$date" ;; esac
 
     # handle relay network nicks and messages
