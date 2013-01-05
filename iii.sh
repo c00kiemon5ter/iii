@@ -47,18 +47,6 @@ tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
     [ "$nick" != '-!-' ] && printf '\a'
     case "$mesg" in *$u*) date="$(tput setaf $l)$date" ;; esac
 
-    # handle relay network nicks and messages
-    # transform '<relay> /netA/nickA> /netB/nickB> mesg'
-    # to '<nickA@relay> nickB> mesg'
-    case "$mesg" in
-        /*/*[\>:]*)
-            nick="${mesg%%[>:]*}@$nick"
-            mesg="${mesg#/*[>:] }"
-            nick="${nick#/*/}"
-            case "$mesg" in /*/*[\>:]*) mesg="${mesg#/*/}" ;; esac
-            ;;
-    esac
-
     # pretify special symbols around words
     # *bold* _underline_ /italics/ and underline urls
     $r && mesg="$(echo "$mesg" | awk -vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
