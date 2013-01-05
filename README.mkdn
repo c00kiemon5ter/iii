@@ -2,7 +2,7 @@
 iii
 ---
 
-`iii` is a frontend to `ii` so that one can easily view and send messages.
+`iii` is a frontend to `ii`/`iim` so that one can easily view and send messages.
 it outputs text, formatted, and colored, and allows for some configuration.
 options are passed as enviromental variables.
 
@@ -55,7 +55,7 @@ notifiii.sh /tmp/irc
 connect
 -------
 
-`connect` is a script to automatically connect `ii` to the specified networks and channels.
+`connect` is a script to automatically connect `ii`/`iim` to the specified networks and channels.
 in addition, it knows when the connection was dropped and automatically tries to reconnect.
 moreover, given a file named `ident`, containing the identification passphrase of the user,
 it sends an identify command to the _nickserv_, to automatically identify the connected user.
@@ -95,11 +95,14 @@ bugs
 related
 -------
 
+ * [iim](https://github.com/c00kiemon5ter/iim)
+ * [ii](http://tools.suckless.org/ii/)
+
  * [nii](https://bitbucket.org/bobertlo/nii)
  * [pcw](https://bitbucket.org/emg/pcw)
  * [srw](https://bitbucket.org/emg/srw)
- * [niii](https://github.com/c00kiemon5ter/niii)
  * [im-scripts](https://github.com/gravicappa/im-scripts)
+ * [niii](https://github.com/c00kiemon5ter/niii)
 
 non-copyright
 -------------

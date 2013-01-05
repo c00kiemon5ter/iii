@@ -31,7 +31,7 @@ for network in $networks; do
 
         # connect to netwrok
         # password is set through the env var synonym to the network name
-        ii -i "$ircdir" -n "$nick" -k "$network" -s "$server" -p "${port:-6667}" &
+        iim -i "$ircdir" -n "$nick" -k "$network" -s "$server" -p "${port:-6667}" &
         pid="$!"
 
         # wait for the connection

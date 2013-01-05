@@ -2,7 +2,7 @@
 # Ivan c00kiemon5ter V Kanakarakis (http://c00kiemon5ter.github.com)
 # for noncopyright information see UNLICENSE file http://unlicense.org/ .
 #
-# frontend to ii for a single channel
+# frontend to ii/iim for a single channel
 # follows the tail of the out file
 # and redirects input to the in file
 
