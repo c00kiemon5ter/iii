@@ -61,10 +61,10 @@ tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
 
     # pretify special symbols around words
     # *bold* _underline_ /italics/ and underline urls
-    mesg="$(echo "$mesg" | awk -vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
-                               -vus="$(tput smul; tput setaf 03)" -vue="$(tput rmul)${wht}" \
-                               -vbs="$(tput bold; tput setaf 01)" -vbe="$(tput sgr0)${wht}" \
-                               -vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
+    $r && mesg="$(echo "$mesg" | awk -vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
+                                     -vus="$(tput smul; tput setaf 03)" -vue="$(tput rmul)${wht}" \
+                                     -vbs="$(tput bold; tput setaf 01)" -vbe="$(tput sgr0)${wht}" \
+                                     -vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
         function replace(l, s, r) {
             p = index(l, s) - 1
             n = p + length(s) + 1
