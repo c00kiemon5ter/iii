@@ -48,8 +48,8 @@ do
 	# strip '<nick>' to 'nick'
 	nick="${nick#<}" nick="${nick%>}"
 
-	# do not notify of server messages
-	case "$nick" in -!-) ;; *) tput bel ;; esac
+	# do not notify of server, frigg, pancakes or GitHub (bots) messages
+	case "$nick" in -!-|frigg|pancakes|feepbot|[Gg]it[Hh]ub*) ;; *) tput bel ;; esac
 
 	# prettify
 	if [ "$p" -ne 0 ]
@@ -71,7 +71,7 @@ do
 		clrmesg="$reset"
 
 		# dark color for special nicks
-		case "$nick" in -!-) clrnick="$dark" clrmesg="$dark";; esac
+		case "$nick" in -!-|frigg|pancakes|feepbot|[Gg]it[Hh]ub*) clrnick="$dark" clrmesg="$dark";; esac
 	fi
 
 	# handle CTCP messages
