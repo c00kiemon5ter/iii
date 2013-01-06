@@ -43,8 +43,13 @@ tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
     time="${mesg%% *}" mesg="${mesg#* }"
     nick="${mesg%% *}" mesg="${mesg#* }"
 
+    # strip '<nick>' to 'nick'
     nick="${nick#<}" nick="${nick%>}"
+
+    # do not notify of server messages
     [ "$nick" != '-!-' ] && printf '\a'
+
+    # highlight date if user was referenced in the message
     case "$mesg" in *$u*) date="$(tput setaf $l)$date" ;; esac
 
     # pretify special symbols around words
