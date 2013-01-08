@@ -35,7 +35,7 @@ for network in $networks; do
         pid="$!"
 
         # wait for the connection
-        while ! test -p "$ircdir/$server/in"; do sleep 1; done
+        while ! test -p "$ircdir/$server/in"; do sleep .3; done
 
         # auth to services
         if [ -e "$ircdir/$server/ident" ]
