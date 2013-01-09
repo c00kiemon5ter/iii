@@ -8,7 +8,7 @@
 
 : "${n:=$USER}"             # the user's nickname
 : "${i:=$HOME/irc}"         # root irc dir
-: "${s:=irc.freenode.net}"  # server
+: "${s:=freenode}"          # server
 : "${c:=""}"                # channel
 : "${m:=12}"                # max nick lenght
 : "${w:=120}"               # max characters per mesg - fold after limit
