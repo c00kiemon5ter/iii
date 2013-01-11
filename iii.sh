@@ -36,7 +36,7 @@ do
 	nick="${nick#<}" nick="${nick%>}"
 
 	# do not notify of server messages
-	[ "$nick" != '-!-' ] && printf '\a'
+	[ "$nick" != '-!-' ] && tput bel
 
 	# highlight date if user was referenced in the message
 	case "$mesg" in *$n*) date="$(tput setaf $l)$date" ;; esac
