@@ -29,119 +29,133 @@ bar="------------------------------------------------------------" # trackbar
 [ -e "$i/$n/$c/out" ] || { touch "$i/$n/$c/out" || exit 1; }
 
 mark() {
-    tail -n1 "$i/$n/$c/out" | {
-        read -r date time nick mesg
-        [ "$mesg" != "$bar" ] && printf '%s -!- %.*s\n' "$(date +"%F %R")" "$f" "${bar}${bar}${bar}" >>"$i/$n/$c/out"
-    }
+	tail -n1 "$i/$n/$c/out" | {
+		read -r date time nick mesg
+		[ "$mesg" != "$bar" ] && printf '%s -!- %.*s\n' "$(date +"%F %R")" "$f" "${bar}${bar}${bar}" >>"$i/$n/$c/out"
+	}
 }
 
 trap "stty '$(stty -g)'; kill -TERM 0" EXIT
 stty -echonl -echo
 
-tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg; do
-    date="${mesg%% *}" mesg="${mesg#* }"
-    time="${mesg%% *}" mesg="${mesg#* }"
-    nick="${mesg%% *}" mesg="${mesg#* }"
+tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg
+do
+	date="${mesg%% *}" mesg="${mesg#* }"
+	time="${mesg%% *}" mesg="${mesg#* }"
+	nick="${mesg%% *}" mesg="${mesg#* }"
 
-    # strip '<nick>' to 'nick'
-    nick="${nick#<}" nick="${nick%>}"
+	# strip '<nick>' to 'nick'
+	nick="${nick#<}" nick="${nick%>}"
 
-    # do not notify of server messages
-    [ "$nick" != '-!-' ] && printf '\a'
+	# do not notify of server messages
+	[ "$nick" != '-!-' ] && printf '\a'
 
-    # highlight date if user was referenced in the message
-    case "$mesg" in *$u*) date="$(tput setaf $l)$date" ;; esac
+	# highlight date if user was referenced in the message
+	case "$mesg" in *$u*) date="$(tput setaf $l)$date" ;; esac
 
-    # pretify special symbols around words
-    # *bold* _underline_ /italics/ and underline urls
-    $r && mesg="$(echo "$mesg" | awk -vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
+	# pretify special symbols around words
+	# *bold* _underline_ /italics/ and underline urls
+	$r && mesg="$(echo "$mesg" | awk -vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
                                      -vus="$(tput smul; tput setaf 03)" -vue="$(tput rmul)${wht}" \
                                      -vbs="$(tput bold; tput setaf 01)" -vbe="$(tput sgr0)${wht}" \
                                      -vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
-        function replace(l, s, r) {
-            p = index(l, s) - 1
-            n = p + length(s) + 1
-            l = substr(l, 1, p) r substr(l, n)
-            return l
-        }
+		function replace(l, s, r) {
+			p = index(l, s) - 1
+			n = p + length(s) + 1
+			l = substr(l, 1, p) r substr(l, n)
+			return l
+		}
 
-        {
-            line = $0
+		{
+			line = $0
 
-            for (i=1; i<=NF; i++)
-                if ($i ~ /^(http|ftp|ssh|www).+/) {
-                    line = replace(line, $i, ls $i le)
-                } else if ($i ~ /^_[^_].*[^_]_$/) {
-                    line = replace(line, $i, us substr($i, 2, length($i) - 2) ue)
-                } else if ($i ~ /^[*].*[*]$/) {
-                    line = replace(line, $i, bs $i be)
-                } else if ($i ~ /^[/].*[/]$/) {
-                    line = replace(line, $i, is $i ie)
-                }
-            print line
-        }
-    ')"
+			for (i=1; i<=NF; i++)
+				if ($i ~ /^(http|ftp|ssh|www).+/) {
+					line = replace(line, $i, ls $i le)
+				} else if ($i ~ /^_[^_].*[^_]_$/) {
+					line = replace(line, $i, us substr($i, 2, length($i) - 2) ue)
+				} else if ($i ~ /^[*].*[*]$/) {
+					line = replace(line, $i, bs $i be)
+				} else if ($i ~ /^[/].*[/]$/) {
+					line = replace(line, $i, is $i ie)
+				}
+			print line
+		}
+	')"
 
-    # value between 1 and 14 - avoid black and white (though there's 7 and 8 in there)
-    # color value is based on the length and first and second letter of the nick
-    # you may want to uncomment and try another randomization function.
-    # -----
-    # those functions have been chosen based on the distribution of colors for
-    # the top 200 most messaged nicks on the channels I participate.
-    # as one goes down the list the distribution gets more and more unequal.
-    # ommited are functions that gave way too bad results (ie "%d & %d & %d").
-    # occurances of white (result:7) and black(result:8) have also been used as classification factors.
-    $r && clr="$(tput setaf $(( (( $(printf '%d ^ %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf '%d + %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf '%d * %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf '%d + %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d * %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf '%d * %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf '%d | %d * %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-    #$r && clr="$(tput setaf $(( (( $(printf '%d & %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	# value between 1 and 14 - avoid black and white (though there's 7 and 8 in there)
+	# color value is based on the length and first and second letter of the nick
+	# you may want to uncomment and try another randomization function.
+	# -----
+	# those functions have been chosen based on the distribution of colors for
+	# the top 200 most messaged nicks on the channels I participate.
+	# as one goes down the list the distribution gets more and more unequal.
+	# ommited are functions that gave way too bad results (ie "%d & %d & %d").
+	# occurances of white (result:7) and black(result:8) have also been used as classification factors.
+	$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	#$r && clr="$(tput setaf $(( (( $(printf '%d + %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	#$r && clr="$(tput setaf $(( (( $(printf '%d * %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	#$r && clr="$(tput setaf $(( (( $(printf '%d + %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	#$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	#$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d * %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	#$r && clr="$(tput setaf $(( (( $(printf '%d * %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	#$r && clr="$(tput setaf $(( (( $(printf '%d | %d * %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	#$r && clr="$(tput setaf $(( (( $(printf '%d & %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
 
-    # let server name have a static color across all randomization functions
-    $r && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
-    case "$mesg" in ACTION*) mesg="$clr$nick$rst:${mesg#ACTION}" nick="*" clr="$grn" ;; esac
+	# let server name have a static color across all randomization functions
+	$r && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
+	case "$mesg" in ACTION*) mesg="$clr$nick$rst:${mesg#ACTION}" nick="*" clr="$grn" ;; esac
 
-    # fold lines breaking on spaces if message is greater than 'f' chars
-    echo "$mesg" | fold -s -w "$f" | \
-        while IFS= read -r line
-        do printf '\r%s %s %*.*s %s %s\n' "${blk}${date}" "${time}${clr}" "${m}" "${m}" "${nick}" "${blk}|${wht}" "${line}${rst}"
-        done
+	# fold lines breaking on spaces if message is greater than 'f' chars
+	echo "$mesg" | fold -s -w "$f" | \
+		while IFS= read -r line
+		do printf '\r%s %s %*.*s %s %s\n' "${blk}${date}" "${time}${clr}" "${m}" "${m}" "${nick}" "${blk}|${wht}" "${line}${rst}"
+		done
 done &
 
 while IFS= read -r line; do
-    case "$line" in
-        '') continue
-            ;;
-        :x) mark && break
-            ;;
-        :q) break
-            ;;
-        :m) mark
-            continue
-            ;;
-        /wi" "*) line="/j nickserv info ${line#/wi}"
-            ;;
-        /me" "*) line="ACTION${line#/me}"
-            ;;
-        /names) line="/names $c"
-            ;;
-        /op" "*) line="/j chanserv op $c ${line##* }"
-            ;;
-        /deop" "*) line="/j chanserv deop $c ${line##* }"
-            ;;
-        /bans) line="/j chanserv akick $c LIST"
-            ;;
-        /ban" "*) line="/j chanserv akick $c ADD ${line##* } -- goodbye"
-            ;;
-        /unban" "*) line="/j chanserv akick $c DEL ${line##* }"
-            ;;
-        /t) line="/topic $c"
-            ;;
-    esac
-    printf '%s\n' "$line"
+	case "$line" in
+		'')
+			continue
+			;;
+		:x)
+			mark && break
+			;;
+		:q)
+			break
+			;;
+		:m)
+			mark
+			continue
+			;;
+		/wi" "*)
+			line="/j nickserv info ${line#/wi}"
+			;;
+		/me" "*)
+			line="ACTION${line#/me}"
+			;;
+		/names)
+			line="/names $c"
+			;;
+		/op" "*)
+			line="/j chanserv op $c ${line##* }"
+			;;
+		/deop" "*)
+			line="/j chanserv deop $c ${line##* }"
+			;;
+		/bans)
+			line="/j chanserv akick $c LIST"
+			;;
+		/ban" "*)
+			line="/j chanserv akick $c ADD ${line##* } -- goodbye"
+			;;
+		/unban" "*)
+			line="/j chanserv akick $c DEL ${line##* }"
+			;;
+		/t)
+			line="/topic $c"
+			;;
+	esac
+	printf '%s\n' "$line"
 done >"$i/$n/$c/in"
 
