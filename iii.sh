@@ -11,17 +11,10 @@
 : "${s:=irc.freenode.net}"  # server
 : "${c:=""}"                # channel
 : "${m:=12}"                # max nick lenght
-: "${h:=20}"                # lines from history
-: "${p:=1}"                 # pretify - colors and stuff
-: "${l:=3}"                 # highlight color
 : "${w:=120}"               # max characters per mesg - fold after limit
+: "${h:=20}"                # lines from history
 
 [ "$1" != '-r' ] && exec rlwrap -a -s 0 -r -b "(){}[],+=^#;|&%" -S "${c:-$s}> " -pgreen "$0" -r
-
-blk="$(tput setaf 6)"       # cyan    \003[36m
-grn="$(tput setaf 2)"       # green   \003[31m
-wht="$(tput setaf 7)"       # white   \003[37m
-rst="$(tput sgr0)"          # reset   \003[0m -- reset
 
 infile="$i/$s/$c/in"
 outfile="$i/$s/$c/out"
@@ -41,49 +34,12 @@ do
 	# do not notify of server messages
 	[ "$nick" != '-!-' ] && tput bel
 
-	# highlight date if user was referenced in the message
-	case "$mesg" in *$n*) date="$(tput setaf $l)$date" ;; esac
-
-	# pretify special symbols around words
-	# *bold* _underline_ /italics/ and underline urls
-	[ "$p" -ne 0 ] && mesg="$(echo "$mesg" | awk \
-		-vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
-		-vus="$(tput smul; tput setaf 03)" -vue="$(tput rmul)${wht}" \
-		-vbs="$(tput bold; tput setaf 01)" -vbe="$(tput sgr0)${wht}" \
-		-vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
-		function replace(l, s, r) {
-			p = index(l, s) - 1
-			n = p + length(s) + 1
-			l = substr(l, 1, p) r substr(l, n)
-			return l
-		}
-
-		{
-			line = $0
-
-			for (i=1; i<=NF; i++)
-				if ($i ~ /^(http|ftp|ssh|www).+/) {
-					line = replace(line, $i, ls $i le)
-				} else if ($i ~ /^_[^_].*[^_]_$/) {
-					line = replace(line, $i, us substr($i, 2, length($i) - 2) ue)
-				} else if ($i ~ /^[*].*[*]$/) {
-					line = replace(line, $i, bs $i be)
-				} else if ($i ~ /^[/].*[/]$/) {
-					line = replace(line, $i, is $i ie)
-				}
-			print line
-		}
-	')"
-
-	[ "$p" -ne 0 ] && clr="$(tput setaf $(( $(printf '(%d ^ %d + %d)' "${#nick}" "'$nick" "'${nick#?}")  % 14 + 1)))" || clr="$grn"
-
-	# let server name have a static color across all randomization functions
-	[ "$p" -ne 0 ] && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
-	case "$mesg" in ACTION*) mesg="$clr$nick$rst:${mesg#ACTION}" nick="*" clr="$grn" ;; esac
+	# handle /me ACTION messages
+	case "$mesg" in ACTION*) mesg="${nick}${mesg#ACTION}" nick="*" ;; esac
 
 	# fold lines breaking on spaces if message is greater than 'w' chars
 	echo "$mesg" | fold -s -w "$w" | while IFS= read -r line; \
-	do printf '\r%s %s %*.*s %s %s\n' "${blk}${date}" "${time}${clr}" "${m}" "${m}" "${nick}" "${blk}|${wht}" "${line}${rst}"
+	do printf '\r%s %s %*.*s %s %s\n' "${date}" "${time}" "${m}" "${m}" "${nick}" "|" "${line}"
 	done
 done &
 
