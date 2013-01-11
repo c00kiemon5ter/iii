@@ -18,23 +18,23 @@ inotifywait -m --exclude "/in$" --format "%w %f" -e modify -r "$i" | \
 		nickname="$(awk '{ n=$3 } END { print n }' "$p$f")"
 		[ "$nickname" = '<-!->' -o "$nickname" = '-!-' ] && continue
 
-		# break path down # p=/ircdir/network/channel/
-		p="${p#$i}"       # p=/network/channel/
-		p="${p%/*}"       # p=/network/channel
+		# break path down # p=/ircdir/server/channel/
+		p="${p#$i}"       # p=/server/channel/
+		p="${p%/*}"       # p=/server/channel
 		c="${p##*/}"      # c=channel
-		p="${p%/*}"       # p=/network
-		n="${p##*/}"      # n=network
-		# if network is empty then action is on the network view
-		[ -z "$n" ] && n="$c" c=""
+		p="${p%/*}"       # p=/server
+		s="${p##*/}"      # s=server
+		# if server is empty then action is on the server view
+		[ -z "$s" ] && s="$c" c=""
 
-		opts="h=50 i="$i" n="$n" c="$c""
+		opts="h=50 i="$i" s="$s" c="$c""
 
 		## spawn a new tmux window named <channel> in a tmux session named IRC
 		env $opts tmiii.sh
 
 		# ## spawn a new urxvt terminal with IRC-<channel> class name
-		# if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "${c:-$n} URxvt"
-		# then env $opts urxvtc -name "IRC-${c:-$n}" -e iii.sh
+		# if ! xwininfo -root -children | sed -n 's,^ \+\(0x[^ ]\+\).*("\([^"]*\)" "\([^"]*\)").*\+,"\1 \2 \3",p' | grep "${c:-$s} URxvt"
+		# then env $opts urxvtc -name "IRC-${c:-$s}" -e iii.sh
 		# fi
 	done
 

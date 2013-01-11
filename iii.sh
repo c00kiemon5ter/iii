@@ -8,15 +8,15 @@
 
 : "${u:=$USER}"             # the user's nickname
 : "${i:=$HOME/irc}"         # root irc dir
-: "${n:=irc.freenode.net}"  # network
-: "${c:=""}"                # channel - empty for network (default)
+: "${s:=irc.freenode.net}"  # server
+: "${c:=""}"                # channel
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
 : "${p:=1}"                 # pretify - colors and stuff
 : "${l:=3}"                 # highlight color
 : "${f:=120}"               # max characters per mesg - fold after limit
 
-[ "$1" != "-r" ] && exec rlwrap -a -s 0 -r -b "(){}[],+=^#;|&%" -S "${c:-$n}> " -pgreen "$0" -r
+[ "$1" != '-r' ] && exec rlwrap -a -s 0 -r -b "(){}[],+=^#;|&%" -S "${c:-$s}> " -pgreen "$0" -r
 
 blk="$(tput setaf 6)"       # cyan    \003[36m
 grn="$(tput setaf 2)"       # green   \003[31m
@@ -25,20 +25,20 @@ rst="$(tput sgr0)"          # reset   \003[0m -- reset
 
 bar="------------------------------------------------------------" # trackbar
 
-[ -p "$i/$n/$c/in"  ] || exit 1
-[ -e "$i/$n/$c/out" ] || { touch "$i/$n/$c/out" || exit 1; }
+[ -p "$i/$s/$c/in"  ] || exit 1
+[ -e "$i/$s/$c/out" ] || { touch "$i/$s/$c/out" || exit 1; }
 
 mark() {
-	tail -n1 "$i/$n/$c/out" | {
+	tail -n1 "$i/$s/$c/out" | {
 		read -r date time nick mesg
-		[ "$mesg" != "$bar" ] && printf '%s -!- %.*s\n' "$(date +"%F %R")" "$f" "${bar}${bar}${bar}" >>"$i/$n/$c/out"
+		[ "$mesg" != "$bar" ] && printf '%s -!- %.*s\n' "$(date +"%F %R")" "$f" "${bar}${bar}${bar}" >>"$i/$s/$c/out"
 	}
 }
 
 trap "stty '$(stty -g)'; kill -TERM 0" EXIT
 stty -echonl -echo
 
-tail -f -n "$h" "$i/$n/$c/out" | while IFS= read -r mesg
+tail -f -n "$h" "$i/$s/$c/out" | while IFS= read -r mesg
 do
 	date="${mesg%% *}" mesg="${mesg#* }"
 	time="${mesg%% *}" mesg="${mesg#* }"
@@ -141,5 +141,5 @@ while IFS= read -r line; do
 			;;
 	esac
 	printf '%s\n' "$line"
-done >"$i/$n/$c/in"
+done >"$i/$s/$c/in"
 
