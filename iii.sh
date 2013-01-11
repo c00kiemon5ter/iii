@@ -23,10 +23,13 @@ grn="$(tput setaf 2)"       # green   \003[31m
 wht="$(tput setaf 7)"       # white   \003[37m
 rst="$(tput sgr0)"          # reset   \003[0m -- reset
 
-[ -p "$i/$s/$c/in"  ] || exit 1
-[ -e "$i/$s/$c/out" ] || { touch "$i/$s/$c/out" || exit 1; }
+infile="$i/$s/$c/in"
+outfile="$i/$s/$c/out"
 
-tail -f -n "$h" "$i/$s/$c/out" | while IFS= read -r mesg
+[ -p "$infile"  ] || exit 1
+[ -e "$outfile" ] || { touch "$outfile" || exit 1; }
+
+tail -f -n "$h" "$outfile" | while IFS= read -r mesg
 do
 	date="${mesg%% *}" mesg="${mesg#* }"
 	time="${mesg%% *}" mesg="${mesg#* }"
@@ -87,8 +90,8 @@ done &
 trap "stty '$(stty -g)'; kill -TERM 0" EXIT
 stty -echonl -echo
 
-bar="------------------------------------------------------------------------------------"
-mark() { printf '%s -!- %.*s\n' "$(date +"%F %R")" "$w" "${bar}${bar}" >>"$i/$s/$c/out"; }
+bar="--------------------------------------------------------------------------------"
+mark() { printf '%s -!- %.*s\n' "$(date +"%F %R")" "$w" "${bar}${bar}" >>"$outfile"; }
 
 while IFS= read -r input; do
 	case "$input" in
@@ -135,5 +138,5 @@ while IFS= read -r input; do
 			;;
 	esac
 	[ -n "$input" ] && printf '%s\n' "$input"
-done >"$i/$s/$c/in"
+done >"$infile"
 
