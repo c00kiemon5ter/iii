@@ -13,20 +13,30 @@
 : "${m:=12}"                # max nick lenght
 : "${w:=120}"               # max characters per mesg - fold after limit
 : "${h:=20}"                # lines from history
+: "${p:=1}"                 # prefity - colors and special patterns
 
 [ "$1" != '-r' ] && exec rlwrap -a -r -S "${c:-$s}> " -pGREEN "$0" -r
 
 infile="$i/$s/$c/in"
 outfile="$i/$s/$c/out"
+sepr='|'
+
+# colors
+reset="$(tput sgr0)"
+black="$(tput setaf 8)"
+yellow="$(tput setaf 11)"
+darkcyan="$(tput setaf 6)"
 
 [ -p "$infile"  ] || exit 1
 [ -e "$outfile" ] || { touch "$outfile" || exit 1; }
 
-tail -f -n "$h" "$outfile" | while IFS= read -r mesg
+tail -f -n "$h" "$outfile" | while IFS= read -r line
 do
-	date="${mesg%% *}" mesg="${mesg#* }"
-	time="${mesg%% *}" mesg="${mesg#* }"
-	nick="${mesg%% *}" mesg="${mesg#* }"
+	unset date time nick mesg
+
+	date="${line%% *}" line="${line#* }"
+	time="${line%% *}" line="${line#* }"
+	nick="${line%% *}" line="${line#* }"
 
 	# strip '<nick>' to 'nick'
 	nick="${nick#<}" nick="${nick%>}"
@@ -34,12 +44,42 @@ do
 	# do not notify of server messages
 	[ "$nick" != '-!-' ] && tput bel
 
+	# pretify
+	if [ "$p" -ne 0 ]
+	then
+		unset clrdate clrnick clrsepr clrmesg
+
+		clrdate="${darkcyan}"
+		case "$line" in *"$n"*) clrdate="${yellow}" ;; esac
+
+		clrnick="$(printf '(%d ^ %d + %d)' "${#nick}" "'$nick" "'${nick#?}")"
+		clrnick="$(( clrnick % 14 + 1 ))"
+		clrnick="$(tput setaf "$clrnick")"
+
+		clrsepr="${darkcyan}"
+
+		clrmesg="${reset}"
+		[ "$nick" = '-!-' ] && clrmesg="${black}"
+
+		[ "${line%% *}" = 'ACTION' ] && clrmesg="${clrnick}"
+	fi
+
 	# handle /me ACTION messages
-	case "$mesg" in ACTION*) mesg="${nick}${mesg#ACTION}" nick="*" ;; esac
+	if [ "${line%% *}" = 'ACTION' ]
+	then
+		line="${line#ACTION}"
+		line="${nick}${reset}${line}"
+		nick="*"
+	fi
 
 	# fold lines breaking on spaces if message is greater than 'w' chars
-	echo "$mesg" | fold -s -w "$w" | while IFS= read -r line; \
-	do printf '\r%s %s %*.*s %s %s\n' "${date}" "${time}" "${m}" "${m}" "${nick}" "|" "${line}"
+	echo "$line" | fold -s -w "$w" | while IFS= read -r mesg; \
+	do
+		printf '\r%s%s %s %s%*.*s %s%s %s%s%s\n' \
+			"${clrdate}" "${date}" "${time}"     \
+			"${clrnick}" "${m}" "${m}" "${nick}" \
+			"${clrsepr}" "${sepr}"               \
+			"${clrmesg}" "${mesg}" "${reset}"
 	done
 done &
 
