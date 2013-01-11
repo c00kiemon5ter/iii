@@ -83,24 +83,7 @@ do
 		}
 	')"
 
-	# value between 1 and 14 - avoid black and white (though there's 7 and 8 in there)
-	# color value is based on the length and first and second letter of the nick
-	# you may want to uncomment and try another randomization function.
-	# -----
-	# those functions have been chosen based on the distribution of colors for
-	# the top 200 most messaged nicks on the channels I participate.
-	# as one goes down the list the distribution gets more and more unequal.
-	# ommited are functions that gave way too bad results (ie "%d & %d & %d").
-	# occurances of white (result:7) and black(result:8) have also been used as classification factors.
-	$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-	#$r && clr="$(tput setaf $(( (( $(printf '%d + %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-	#$r && clr="$(tput setaf $(( (( $(printf '%d * %d + %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-	#$r && clr="$(tput setaf $(( (( $(printf '%d + %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-	#$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-	#$r && clr="$(tput setaf $(( (( $(printf '%d ^ %d * %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-	#$r && clr="$(tput setaf $(( (( $(printf '%d * %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-	#$r && clr="$(tput setaf $(( (( $(printf '%d | %d * %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
-	#$r && clr="$(tput setaf $(( (( $(printf '%d & %d ^ %d' "${#nick}" "'$nick" "'${nick#?}") ) % 14) + 1)))" || clr="$grn"
+	$r && clr="$(tput setaf $(( $(printf '(%d ^ %d + %d)' "${#nick}" "'$nick" "'${nick#?}")  % 14 + 1)))" || clr="$grn"
 
 	# let server name have a static color across all randomization functions
 	$r && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
