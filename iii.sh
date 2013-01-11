@@ -27,6 +27,14 @@ black="$(tput setaf 8)"
 yellow="$(tput setaf 11)"
 darkcyan="$(tput setaf 6)"
 
+# markup
+sb="$(tput bold; tput setaf 9)"
+eb="$(tput sgr0; tput sgr0)"
+su="$(tput smul; tput setaf 11)"
+eu="$(tput rmul; tput sgr0)"
+si="$(tput sitm; tput setaf 13)"
+ei="$(tput ritm; tput sgr0)"
+
 [ -p "$infile"  ] || exit 1
 [ -e "$outfile" ] || { touch "$outfile" || exit 1; }
 
@@ -75,6 +83,14 @@ do
 	# fold lines breaking on spaces if message is greater than 'w' chars
 	echo "$line" | fold -s -w "$w" | while IFS= read -r mesg; \
 	do
+		[ "$p" -ne 0 ] && mesg="$(echo "$mesg" | sed \
+			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([_][[:alnum:][:punct:]]\+[_]\)\([[:punct:][:space:]]\|$\),\1${su}\2${eu}\3,g" \
+			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([_][[:alnum:][:punct:]]\+[_]\)\([[:punct:][:space:]]\|$\),\1${su}\2${eu}\3,g" \
+			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([/][[:alnum:][:punct:]]\+[/]\)\([[:punct:][:space:]]\|$\),\1${si}\2${ei}\3,g" \
+			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([/][[:alnum:][:punct:]]\+[/]\)\([[:punct:][:space:]]\|$\),\1${si}\2${ei}\3,g" \
+			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([*][[:alnum:][:punct:]]\+[*]\)\([[:punct:][:space:]]\|$\),\1${sb}\2${eb}\3,g" \
+			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([*][[:alnum:][:punct:]]\+[*]\)\([[:punct:][:space:]]\|$\),\1${sb}\2${eb}\3,g")"
+
 		printf '\r%s%s %s %s%*.*s %s%s %s%s%s\n' \
 			"${clrdate}" "${date}" "${time}"     \
 			"${clrnick}" "${m}" "${m}" "${nick}" \
