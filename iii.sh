@@ -23,20 +23,8 @@ grn="$(tput setaf 2)"       # green   \003[31m
 wht="$(tput setaf 7)"       # white   \003[37m
 rst="$(tput sgr0)"          # reset   \003[0m -- reset
 
-bar="------------------------------------------------------------" # trackbar
-
 [ -p "$i/$s/$c/in"  ] || exit 1
 [ -e "$i/$s/$c/out" ] || { touch "$i/$s/$c/out" || exit 1; }
-
-mark() {
-	tail -n1 "$i/$s/$c/out" | {
-		read -r date time nick mesg
-		[ "$mesg" != "$bar" ] && printf '%s -!- %.*s\n' "$(date +"%F %R")" "$w" "${bar}${bar}${bar}" >>"$i/$s/$c/out"
-	}
-}
-
-trap "stty '$(stty -g)'; kill -TERM 0" EXIT
-stty -echonl -echo
 
 tail -f -n "$h" "$i/$s/$c/out" | while IFS= read -r mesg
 do
@@ -96,49 +84,56 @@ do
 	done
 done &
 
-while IFS= read -r line; do
-	case "$line" in
+trap "stty '$(stty -g)'; kill -TERM 0" EXIT
+stty -echonl -echo
+
+bar="------------------------------------------------------------------------------------"
+mark() { printf '%s -!- %.*s\n' "$(date +"%F %R")" "$w" "${bar}${bar}" >>"$i/$s/$c/out"; }
+
+while IFS= read -r input; do
+	case "$input" in
 		'')
 			continue
-			;;
-		:x)
-			mark && break
-			;;
-		:q)
-			break
 			;;
 		:m)
 			mark
 			continue
 			;;
+		:x)
+			mark
+			break
+			;;
+		:q)
+			break
+			;;
 		/wi" "*)
-			line="/j nickserv info ${line#/wi}"
+			input="/j nickserv info ${input#/wi}"
 			;;
 		/me" "*)
-			line="ACTION${line#/me}"
+			input="ACTION${input#/me}"
 			;;
 		/names)
-			line="/names $c"
+			input="/names $c"
 			;;
 		/op" "*)
-			line="/j chanserv op $c ${line##* }"
+			input="/j chanserv op $c ${input##* }"
 			;;
 		/deop" "*)
-			line="/j chanserv deop $c ${line##* }"
+			input="/j chanserv deop $c ${input##* }"
 			;;
 		/bans)
-			line="/j chanserv akick $c LIST"
+			input="/j chanserv akick $c LIST"
 			;;
 		/ban" "*)
-			line="/j chanserv akick $c ADD ${line##* } -- goodbye"
+			input="/j chanserv akick $c ADD ${input##* } -- goodbye"
 			;;
 		/unban" "*)
-			line="/j chanserv akick $c DEL ${line##* }"
+			input="/j chanserv akick $c DEL ${input##* }"
 			;;
 		/t)
-			line="/topic $c"
+			input="/topic $c"
 			;;
 	esac
-	printf '%s\n' "$line"
+	[ -n "$input" ] && printf '%s\n' "$input"
 done >"$i/$s/$c/in"
 
