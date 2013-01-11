@@ -14,7 +14,7 @@
 : "${w:=120}"               # max characters per mesg - fold after limit
 : "${h:=20}"                # lines from history
 
-[ "$1" != '-r' ] && exec rlwrap -a -s 0 -r -b "(){}[],+=^#;|&%" -S "${c:-$s}> " -pgreen "$0" -r
+[ "$1" != '-r' ] && exec rlwrap -a -r -S "${c:-$s}> " -pGREEN "$0" -r
 
 infile="$i/$s/$c/in"
 outfile="$i/$s/$c/out"
