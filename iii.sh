@@ -12,7 +12,7 @@
 : "${c:=""}"                # channel - empty for network (default)
 : "${m:=12}"                # max nick lenght
 : "${h:=20}"                # lines from history
-: "${r:=true}"              # whether to use random colors for nicks
+: "${p:=1}"                 # pretify - colors and stuff
 : "${l:=3}"                 # highlight color
 : "${f:=120}"               # max characters per mesg - fold after limit
 
@@ -55,10 +55,11 @@ do
 
 	# pretify special symbols around words
 	# *bold* _underline_ /italics/ and underline urls
-	$r && mesg="$(echo "$mesg" | awk -vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
-                                     -vus="$(tput smul; tput setaf 03)" -vue="$(tput rmul)${wht}" \
-                                     -vbs="$(tput bold; tput setaf 01)" -vbe="$(tput sgr0)${wht}" \
-                                     -vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
+	[ "$p" -ne 0 ] && mesg="$(echo "$mesg" | awk \
+		-vis="$(tput sitm; tput setaf 05)" -vie="$(tput ritm)${wht}" \
+		-vus="$(tput smul; tput setaf 03)" -vue="$(tput rmul)${wht}" \
+		-vbs="$(tput bold; tput setaf 01)" -vbe="$(tput sgr0)${wht}" \
+		-vls="$(tput smul; tput setaf 11)" -vle="$(tput rmul)${wht}" '
 		function replace(l, s, r) {
 			p = index(l, s) - 1
 			n = p + length(s) + 1
@@ -83,10 +84,10 @@ do
 		}
 	')"
 
-	$r && clr="$(tput setaf $(( $(printf '(%d ^ %d + %d)' "${#nick}" "'$nick" "'${nick#?}")  % 14 + 1)))" || clr="$grn"
+	[ "$p" -ne 0 ] && clr="$(tput setaf $(( $(printf '(%d ^ %d + %d)' "${#nick}" "'$nick" "'${nick#?}")  % 14 + 1)))" || clr="$grn"
 
 	# let server name have a static color across all randomization functions
-	$r && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
+	[ "$p" -ne 0 ] && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
 	case "$mesg" in ACTION*) mesg="$clr$nick$rst:${mesg#ACTION}" nick="*" clr="$grn" ;; esac
 
 	# fold lines breaking on spaces if message is greater than 'f' chars
