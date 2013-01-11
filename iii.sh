@@ -14,7 +14,7 @@
 : "${h:=20}"                # lines from history
 : "${p:=1}"                 # pretify - colors and stuff
 : "${l:=3}"                 # highlight color
-: "${f:=120}"               # max characters per mesg - fold after limit
+: "${w:=120}"               # max characters per mesg - fold after limit
 
 [ "$1" != '-r' ] && exec rlwrap -a -s 0 -r -b "(){}[],+=^#;|&%" -S "${c:-$s}> " -pgreen "$0" -r
 
@@ -31,7 +31,7 @@ bar="------------------------------------------------------------" # trackbar
 mark() {
 	tail -n1 "$i/$s/$c/out" | {
 		read -r date time nick mesg
-		[ "$mesg" != "$bar" ] && printf '%s -!- %.*s\n' "$(date +"%F %R")" "$f" "${bar}${bar}${bar}" >>"$i/$s/$c/out"
+		[ "$mesg" != "$bar" ] && printf '%s -!- %.*s\n' "$(date +"%F %R")" "$w" "${bar}${bar}${bar}" >>"$i/$s/$c/out"
 	}
 }
 
@@ -90,11 +90,10 @@ do
 	[ "$p" -ne 0 ] && [ "$nick" == '-!-' ] && clr="$(tput setaf 14)"
 	case "$mesg" in ACTION*) mesg="$clr$nick$rst:${mesg#ACTION}" nick="*" clr="$grn" ;; esac
 
-	# fold lines breaking on spaces if message is greater than 'f' chars
-	echo "$mesg" | fold -s -w "$f" | \
-		while IFS= read -r line
-		do printf '\r%s %s %*.*s %s %s\n' "${blk}${date}" "${time}${clr}" "${m}" "${m}" "${nick}" "${blk}|${wht}" "${line}${rst}"
-		done
+	# fold lines breaking on spaces if message is greater than 'w' chars
+	echo "$mesg" | fold -s -w "$w" | while IFS= read -r line; \
+	do printf '\r%s %s %*.*s %s %s\n' "${blk}${date}" "${time}${clr}" "${m}" "${m}" "${nick}" "${blk}|${wht}" "${line}${rst}"
+	done
 done &
 
 while IFS= read -r line; do
