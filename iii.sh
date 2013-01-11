@@ -6,7 +6,7 @@
 # follows the tail of the out file
 # and redirects input to the in file
 
-: "${u:=$USER}"             # the user's nickname
+: "${n:=$USER}"             # the user's nickname
 : "${i:=$HOME/irc}"         # root irc dir
 : "${s:=irc.freenode.net}"  # server
 : "${c:=""}"                # channel
@@ -51,7 +51,7 @@ do
 	[ "$nick" != '-!-' ] && printf '\a'
 
 	# highlight date if user was referenced in the message
-	case "$mesg" in *$u*) date="$(tput setaf $l)$date" ;; esac
+	case "$mesg" in *$n*) date="$(tput setaf $l)$date" ;; esac
 
 	# pretify special symbols around words
 	# *bold* _underline_ /italics/ and underline urls
