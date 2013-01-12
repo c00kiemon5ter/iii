@@ -14,7 +14,8 @@ inotifywait -m --exclude "/in$" --format "%w %f" -e modify -r "$i" | \
 	while read -r p f; do
 		# ignore notifications files other than 'out'
 		[ "$f" != "out" ] && continue
-		# ignore server messages
+
+		# ignore messages from server
 		nickname="$(awk '{ n=$3 } END { print n }' "$p$f")"
 		[ "$nickname" = '<-!->' -o "$nickname" = '-!-' ] && continue
 
