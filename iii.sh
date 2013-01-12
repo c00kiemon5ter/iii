@@ -83,7 +83,7 @@ do
 	# fold lines breaking on spaces if message is greater than 'w' chars
 	echo "$line" | fold -s -w "$w" | while IFS= read -r mesg; \
 	do
-		[ "$p" -ne 0 ] && mesg="$(echo "$mesg" | sed \
+		[ "$p" -gt 1 ] && mesg="$(echo "$mesg" | sed \
 			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([_][[:alnum:][:punct:]]\+[_]\)\([[:punct:][:space:]]\|$\),\1${su}\2${eu}\3,g" \
 			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([_][[:alnum:][:punct:]]\+[_]\)\([[:punct:][:space:]]\|$\),\1${su}\2${eu}\3,g" \
 			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([/][[:alnum:][:punct:]]\+[/]\)\([[:punct:][:space:]]\|$\),\1${si}\2${ei}\3,g" \
