@@ -97,7 +97,7 @@ do
 			"${clrsepr}" "${sepr}"               \
 			"${clrmesg}" "${mesg}" "${reset}"
 
-		[ "$p" -ne 0 ] && clrmesg="${reset}"
+		[ "$p" -ne 0 -a "$nick" != '-!-' ] && clrmesg="${reset}"
 	done
 done &
 
