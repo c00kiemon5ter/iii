@@ -96,6 +96,8 @@ do
 			"${clrnick}" "${m}" "${m}" "${nick}" \
 			"${clrsepr}" "${sepr}"               \
 			"${clrmesg}" "${mesg}" "${reset}"
+
+		[ "$p" -ne 0 ] && clrmesg="${reset}"
 	done
 done &
 
