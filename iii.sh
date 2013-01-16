@@ -40,7 +40,7 @@ ei="$(tput ritm; tput sgr0)"
 
 tail -f -n "$h" "$outfile" | while IFS= read -r line
 do
-	unset date time nick mesg
+	unset date time nick mesg ctcp
 
 	date="${line%% *}" line="${line#* }"
 	time="${line%% *}" line="${line#* }"
@@ -52,7 +52,7 @@ do
 	# do not notify of server messages
 	[ "$nick" != '-!-' ] && tput bel
 
-	# pretify
+	# prettify
 	if [ "$p" -ne 0 ]
 	then
 		unset clrdate clrnick clrsepr clrmesg
@@ -69,15 +69,21 @@ do
 		clrmesg="${reset}"
 		[ "$nick" = '-!-' ] && clrmesg="${black}"
 
-		[ "${line%% *}" = 'ACTION' ] && clrmesg="${clrnick}"
+		[ "${line#}" != "${line}" ] && clrmesg="${clrnick}"
 	fi
 
-	# handle /me ACTION messages
-	if [ "${line%% *}" = 'ACTION' ]
+	# handle CTCP messages
+	if [ "${line#}" != "${line}" ]
 	then
-		line="${line#ACTION}"
-		line="${nick}${reset}${line}"
-		nick="*"
+		line="${line#}"
+		line="${line%}"
+		ctcp="${line%% *}"
+		line="${line#* }"
+
+		if [ "$ctcp" != 'ACTION' ]
+		then line="[CTCP:${ctcp}]${reset} ${line}"
+		else line="${nick}${reset} ${line}" nick="*"
+		fi
 	fi
 
 	# fold lines breaking on spaces if message is greater than 'w' chars
