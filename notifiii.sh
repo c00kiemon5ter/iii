@@ -17,7 +17,9 @@ inotifywait -m --exclude "/in$" --format "%w %f" -e modify -r "$i" | \
 
 		# ignore messages from server
 		nickname="$(awk '{ n=$3 } END { print n }' "$p$f")"
-		[ "$nickname" = '<-!->' -o "$nickname" = '-!-' ] && continue
+		nickname="${nickname#<}"
+		nickname="${nickname%>}"
+		[ "$nickname" = '-!-' ] && continue
 
 		# break path down # p=/ircdir/server/channel/
 		p="${p#$i}"       # p=/server/channel/
