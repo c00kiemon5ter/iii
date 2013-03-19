@@ -23,9 +23,8 @@ sepr='|'
 
 # colors
 reset="$(tput sgr0)"
-black="$(tput setaf 8)"
-yellow="$(tput setaf 11)"
-darkcyan="$(tput setaf 6)"
+dark="$(tput setaf 8)"
+bright="$(tput setaf 3)"
 
 # markup
 sb="$(tput bold; tput setaf 9)"
@@ -57,17 +56,17 @@ do
 	then
 		unset clrdate clrnick clrsepr clrmesg
 
-		clrdate="${darkcyan}"
-		case "$line" in *"$n"*) clrdate="${yellow}" ;; esac
+		clrdate="${dark}"
+		case "$line" in *"$n"*) clrdate="${bright}" ;; esac
 
 		clrnick="$(printf '(%d ^ %d + %d)' "${#nick}" "'$nick" "'${nick#?}")"
 		clrnick="$(( clrnick % 14 + 1 ))"
 		clrnick="$(tput setaf "$clrnick")"
 
-		clrsepr="${darkcyan}"
+		clrsepr="${dark}"
 
 		clrmesg="${reset}"
-		[ "$nick" = '-!-' ] && clrmesg="${black}"
+		[ "$nick" = '-!-' ] && clrmesg="${dark}"
 
 		[ "${line#}" != "${line}" ] && clrmesg="${clrnick}"
 	fi
