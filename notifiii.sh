@@ -30,7 +30,7 @@ inotifywait -m --exclude "/in$" --format "%w %f" -e modify -r "$i" | \
 		# if server is empty then action is on the server view
 		[ -z "$s" ] && s="$c" c=""
 
-		opts="h=50 i="$i" s="$s" c="$c""
+		opts="h=20 i="$i" s="$s" c="$c""
 
 		## spawn a new tmux window named <channel> in a tmux session named IRC
 		env $opts tmiii.sh
