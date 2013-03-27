@@ -5,13 +5,36 @@
 
 # server info functions
 freenode() {
-	server='irc.freenode.net'
-	channels="#foo #bar"
+	server='freenode'
+	channels="
+	##c
+	#foss-aueb
+	#musl
+	#concatenative
+	#forth
+	#xcb
+	#awk
+	##posix
+	#gentoo-el
+	#osarena
+	#sabotage
+	#yocto
+	#oe
+	#edev
+	#elinux
+	#friendly-coders
+	#workingset
+	"
+	port=6666
 }
 
 oftc() {
-	server='irc.oftc.net'
-	channels="#xyz #abc"
+	server='oftc'
+	channels="
+	#suckless
+	#ii
+	"
+	port=6667
 }
 
 # these match the functions above
