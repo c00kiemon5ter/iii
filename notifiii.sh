@@ -19,7 +19,7 @@ inotifywait -m --exclude "/in$" --format "%w %f" -e modify -r "$i" | \
 		nickname="$(awk '{ n=$3 } END { print n }' "$p$f")"
 		nickname="${nickname#<}"
 		nickname="${nickname%>}"
-		[ "$nickname" = '-!-' ] && continue
+		case "$nickname" in -!-) continue ;; esac
 
 		# break path down # p=/ircdir/server/channel/
 		p="${p#$i}"       # p=/server/channel/

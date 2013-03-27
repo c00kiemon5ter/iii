@@ -49,7 +49,7 @@ do
 	nick="${nick#<}" nick="${nick%>}"
 
 	# do not notify of server messages
-	[ "$nick" != '-!-' ] && tput bel
+	case "$nick" in -!-) ;; *) tput bel ;; esac
 
 	# prettify
 	if [ "$p" -ne 0 ]
