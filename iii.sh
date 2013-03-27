@@ -24,7 +24,7 @@ sepr='|'
 # colors
 reset="$(tput sgr0)"
 dark="$(tput setaf 8)"
-bright="$(tput setaf 3)"
+highlight="$(tput setaf 3)"
 
 # markup
 sb="$(tput bold; tput setaf 9)"
@@ -54,21 +54,26 @@ do
 	# prettify
 	if [ "$p" -ne 0 ]
 	then
-		unset clrdate clrnick clrsepr clrmesg
+		unset clrdate clrnick clrsepr clrmesg tmpnick
 
-		clrdate="${dark}"
-		case "$line" in *"$n"*) clrdate="${bright}" ;; esac
+		clrdate="$dark"
+		case "$line" in *"$n"*) clrdate="$highlight" ;; esac
 
-		clrnick="$(printf '(%d ^ %d + %d)' "${#nick}" "'$nick" "'${nick#?}")"
-		clrnick="$(( clrnick % 14 + 1 ))"
+		tmpnick="${nick%[_12]}"
+		clrnick="$(printf '(%d ^ %d + %d + %d)' "${#tmpnick}" "'${tmpnick}" "'${tmpnick#?}" "'${tmpnick#??}")"
+
+		# avoid black(1), dark blue(4), yellow(11) and white(7, 13)
+		clrnick="$((clrnick % 12 + 1))"
+		case "$clrnick" in 4) clrnick=5 ;; 7) clrnick=6 ;; 11) clrnick=10 ;; esac
+
 		clrnick="$(tput setaf "$clrnick")"
+		clrsepr="$dark"
+		clrmesg="$reset"
 
-		clrsepr="${dark}"
+		# dark color for special nicks
+		case "$nick" in -!-) clrnick="$dark" clrmesg="$dark";; esac
 
-		clrmesg="${reset}"
-		[ "$nick" = '-!-' ] && clrmesg="${dark}"
-
-		[ "${line#}" != "${line}" ] && clrmesg="${clrnick}"
+		[ "${line#}" != "$line" ] && clrmesg="$clrnick"
 	fi
 
 	# handle CTCP messages
