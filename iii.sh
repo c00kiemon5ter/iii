@@ -89,7 +89,7 @@ do
 	fi
 
 	# fold lines breaking on spaces if message is greater than 'w' chars or does not fit
-	mw="$(($(tput cols) - ${#date} - ${#time} - $m - 5))"
+	mw="$(($(tput cols) - ${#time} - $m - 5))"
 	[ "$mw" -gt "$w" ] && mw="$w"
 	printf '%s\n' "$line" | fold -s -w "$mw" | while IFS= read -r mesg; \
 	do
@@ -101,8 +101,8 @@ do
 			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([*][[:alnum:][:punct:]]\+[*]\)\([[:punct:][:space:]]\|$\),\1${sb}\2${eb}\3,g" \
 			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([*][[:alnum:][:punct:]]\+[*]\)\([[:punct:][:space:]]\|$\),\1${sb}\2${eb}\3,g")"
 
-		printf '\r%s%s %s %s%*.*s %s%s %s%s%s\n' \
-			"${clrdate}" "${date}" "${time}"     \
+		printf '\r%s%s %s%*.*s %s%s %s%s%s\n' \
+			"${clrdate}" "${time}"               \
 			"${clrnick}" "${m}" "${m}" "${nick}" \
 			"${clrsepr}" "${sepr}"               \
 			"${clrmesg}" "${mesg}" "${reset}"
@@ -113,7 +113,7 @@ trap "stty '$(stty -g)'; kill -TERM 0" EXIT
 stty -echonl -echo
 
 bar="--------------------------------------------------------------------------------"
-mark() { printf '%s -!- %.*s\n' "$(date +"%F %R")" "$w" "${bar}${bar}" >>"$outfile"; }
+mark() { printf '%s -!- %.*s\n' "$(date +"%F %T")" "$w" "${bar}${bar}" >>"$outfile"; }
 
 while IFS= read -r input; do
 	case "$input" in
