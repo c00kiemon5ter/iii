@@ -72,8 +72,6 @@ do
 
 		# dark color for special nicks
 		case "$nick" in -!-) clrnick="$dark" clrmesg="$dark";; esac
-
-		[ "${line#}" != "$line" ] && clrmesg="$clrnick"
 	fi
 
 	# handle CTCP messages
@@ -85,8 +83,8 @@ do
 		line="${line#* }"
 
 		if [ "$ctcp" != 'ACTION' ]
-		then line="[CTCP:${ctcp}]${reset} ${line}"
-		else line="${nick}${reset} ${line}" nick="*"
+		then line="${clrnick}[CTCP:${ctcp}]${clrmesg} ${line}"
+		else line="${clrnick}${nick}${clrmesg} ${line}" nick="*"
 		fi
 	fi
 
@@ -108,8 +106,6 @@ do
 			"${clrnick}" "${m}" "${m}" "${nick}" \
 			"${clrsepr}" "${sepr}"               \
 			"${clrmesg}" "${mesg}" "${reset}"
-
-		[ "$p" -ne 0 -a "$nick" != '-!-' ] && clrmesg="${reset}"
 	done
 done &
 
