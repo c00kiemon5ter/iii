@@ -62,9 +62,9 @@ do
 		tmpnick="${nick%[_12]}"
 		clrnick="$(printf '(%d ^ %d + %d + %d)' "${#tmpnick}" "'${tmpnick}" "'${tmpnick#?}" "'${tmpnick#??}")"
 
-		# avoid black(1), dark blue(4), yellow(11) and white(7, 13)
-		clrnick="$((clrnick % 12 + 1))"
-		case "$clrnick" in 4) clrnick=5 ;; 7) clrnick=6 ;; 11) clrnick=10 ;; esac
+		# avoid black(1,8), dark blue(4), bright yellow(11) and white(7, 15)
+		clrnick="$((clrnick % 10 + 1))"
+		case "$clrnick" in 4) clrnick=12 ;; 7) clrnick=13 ;; 8) clrnick=14 ;; esac
 
 		clrnick="$(tput setaf "$clrnick")"
 		clrsepr="$dark"
