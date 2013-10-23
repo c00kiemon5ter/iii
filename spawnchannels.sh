@@ -1,59 +1,36 @@
 #!/usr/bin/env sh
 
-spawn() { h=${h:-20} s="$1" c="#$2" tmiii.sh; }
+spawn() { h=${h:-100} s="$1" c="$2" tmiii.sh; }
 
 f='freenode'
 o='oftc'
 
-spawn "$f" "#c"
-spawn "$f" "foss-aueb"
-spawn "$f" "musl"
+spawn "$f" "#musl"
 
 case "$1" in
-	'-s') # shell
-		spawn "$f" "bash"
-		spawn "$f" "awk"
+	-a)
+		spawn "$f" "#foss-aueb"
+		spawn "$f" "#thinking.gr"
 		;;
-	'-x') # xlib and xcb
-		spawn "$f" "xcb"
+	-aa)
+		spawn "$f" "##posix"
+		spawn "$f" "#awk"
+		spawn "$f" "#forth"
+		spawn "$f" "#concatenative"
+		spawn "$f" "#sabotage"
 		;;
-	'-c') # C and STD
-		spawn "$f" "#c"
-		spawn "$f" "musl"
-		spawn "$f" "#posix"
-		;;
-	'-f') # factor forth and awesomeness
-		spawn "$f" "forth"
-		spawn "$f" "concatenative"
-		;;
-	'-o') # oftc -- suckless.org
-		#spawn "$f" "cat-v"
-		spawn "$o" "suckless"
-		spawn "$o" "ii"
-		;;
-	'-p') # programming and algos
-		spawn "$f" "#programming"
-		spawn "$f" "#algorithms"
-		;;
-	'-v') # version control
-		spawn "$f" "git"
-		spawn "$f" "github"
-		;;
-	'-d') # distributions
-		spawn "$f" "sabotage"
-		spawn "$f" "#linux"
-		spawn "$f" "crux"
-		spawn "$f" "nixos"
-		;;
-	'-g') # greeks
-		spawn "$f" "foss-aueb"
-		spawn "$f" "gentoo-el"
-		spawn "$f" "osarena"
-		;;
-	'-e') # embeded
+	-aaa)
+		spawn "$f" "#gentoo-el"
+		spawn "$o" "#suckless"
+		spawn "$o" "#ii"
 		spawn "$f" "yocto"
 		spawn "$f" "oe"
-		spawn "$f" "edev"
-		spawn "$f" "elinux"
+		;;
+	-aaaa)
+		spawn "$f" "##c"
+		spawn "$f" "#cat-v"
+		spawn "$f" "#bash"
+		spawn "$f" "#nixos"
+		spawn "$f" "#osarena"
 		;;
 esac

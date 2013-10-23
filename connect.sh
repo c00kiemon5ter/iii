@@ -1,40 +1,35 @@
 #!/usr/bin/env sh
 
-: "${ircdir:=$HOME/irc}"
+: "${ircdir:="$HOME/irc"}"
 : "${nick:=$USER}"
 
-# server info functions
-freenode() {
-	server='freenode'
-	channels="
-	##c
-	#foss-aueb
-	#musl
-	#concatenative
-	#forth
-	#xcb
-	#awk
-	##posix
-	#gentoo-el
-	#osarena
-	#sabotage
-	#yocto
-	#oe
-	#edev
-	#elinux
-	#friendly-coders
-	#workingset
-	"
-	port=6666
-}
-
 oftc() {
+	port=6666
 	server='oftc'
 	channels="
 	#suckless
 	#ii
 	"
+}
+
+# server info functions
+freenode() {
 	port=6667
+	server='freenode'
+	channels="
+	#musl
+	#sabotage
+	##posix
+	#awk
+	#workingset
+
+	#concatenative
+	#forth
+
+	#thinking.gr
+	#foss-aueb
+	#gentoo-el
+	"
 }
 
 # these match the functions above
