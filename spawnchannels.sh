@@ -1,9 +1,10 @@
 #!/usr/bin/env sh
 
-spawn() { h=${h:-100} s="$1" c="$2" tmiii.sh; }
+spawn() { n="${n:-$USER}" h=${h:-100} s="$1" c="$2" tmiii.sh; }
 
 f='freenode'
 o='oftc'
+n=c00kiemon5ter
 
 spawn "$f" "#musl"
 
