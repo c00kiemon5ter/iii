@@ -91,7 +91,7 @@ do
 	# fold lines breaking on spaces if message is greater than 'w' chars or does not fit
 	mw="$(($(tput cols) - ${#date} - ${#time} - $m - 5))"
 	[ "$mw" -gt "$w" ] && mw="$w"
-	echo "$line" | fold -s -w "$mw" | while IFS= read -r mesg; \
+	printf '%s\n' "$line" | fold -s -w "$mw" | while IFS= read -r mesg; \
 	do
 		[ "$p" -gt 1 ] && mesg="$(echo "$mesg" | sed \
 			-e "s,\(^\|[[:space:]][[:punct:]]*\)\([_][[:alnum:][:punct:]]\+[_]\)\([[:punct:][:space:]]\|$\),\1${su}\2${eu}\3,g" \
